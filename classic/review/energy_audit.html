@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Energy mechanics - Forever DPS benchmark</title><style>
+body{background:#15171d;color:#e8e9ed;font:16px/1.6 system-ui,sans-serif;margin:0}
+a{color:#a9d8ff}
+.top{display:flex;gap:1.5rem;flex-wrap:wrap;padding:.8rem 2rem;background:#242834;border-bottom:1px solid #343945;font-size:.92rem}
+article{max-width:1150px;margin:0 auto;padding:1.5rem 2rem 4rem}
+h1,h2,h3,h4{line-height:1.25;margin:2rem 0 .8rem}h1{margin-top:.5rem}
+h2{border-bottom:1px solid #343945;padding-bottom:.3rem}
+.tw{overflow-x:auto;margin:1rem 0}
+table{border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{padding:.4rem .75rem;border-bottom:1px solid #343945;text-align:left;vertical-align:top}
+thead{background:#242834}tbody tr:hover{background:#1e212a}
+code{background:#242834;padding:.1rem .35rem;border-radius:4px;font-size:.9em}
+pre{background:#242834;padding:1rem;border-radius:6px;overflow-x:auto}pre code{background:none;padding:0}
+blockquote{margin:1rem 0;padding:.2rem 1rem;border-left:4px solid #4a5163;color:#b9c0cf}
+li{margin:.2rem 0}img{max-width:100%}
+</style></head>
+<body><nav class="top"><a href="./">&larr; Benchmark matrix</a><a href="energy_audit.md">Raw markdown</a></nav>
+<article>
+<h1 id="energy-mechanics">Energy mechanics</h1>
+<h2 id="evidence-and-model">Evidence and model</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Mechanic</th>
+<th>Evidence</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Base recovery</td>
+<td><code>PowerType.db2</code> gives 10 Energy/sec both in and out of combat, zero regeneration-interrupt time, and a base maximum of 100. Same records in Forever 1.60.1.69893 and 1.60.1.69913.</td>
+<td>10/sec before explicit regeneration effects.</td>
+</tr>
+<tr>
+<td>Recovery timing</td>
+<td><a href="https://us.forums.blizzard.com/en/wow/t/rogue-changes-wishlist/2352824">Rogue beta feedback</a> and <a href="https://us.forums.blizzard.com/en/wow/t/feral-druid-in-wow-forever-has-a-design-problem-not-just-a-tuning-problem/2354035">Feral beta feedback</a> describe smooth, usable regeneration rather than Classic ticks. These are player reports, not Blizzard specifications.</td>
+<td>Forever uses 100-ms integration steps, with 1 Energy per step before modifiers. This is not a claimed server tick interval.</td>
+</tr>
+<tr>
+<td>Haste scaling</td>
+<td>Model assumption, not established by client data. The energy records, including flags, are identical to Classic Era; that does not settle how the server applies haste.</td>
+<td>General haste multiplies regeneration. Rating, Skyborne haste, Berserking and applicable Tier 1 haste are included. Attack-speed-only effects such as Slice and Dice are not. In-game check T15 remains open.</td>
+</tr>
+<tr>
+<td>Adrenaline Rush</td>
+<td>Spell 13750 specifies +100% regeneration for 15 seconds.</td>
+<td>Doubles recovery. Partial intervals are settled at the old rate when the buff starts or ends.</td>
+</tr>
+<tr>
+<td>Miss refunds</td>
+<td>Client costs do not specify the general refund rule.</td>
+<td>Existing 80% builder refunds and zero damaging-finisher refunds retained pending T16. Refunds use paid cost, not undiscounted cost.</td>
+</tr>
+</tbody></table></div>
+<p>The previous engine delivered 20.2 Energy every 2.02 seconds in Forever, just
+as in Classic. The average rate was already 10/sec, but ability readiness and
+energy-cap waste were wrong for smooth recovery. Fixing timing does not amount
+to giving the classes additional baseline resources.</p>
+<p>Source records and spell inputs are preserved in
+<a href="https://github.com/gunba/wow-forever-sim/blob/forever/assets/db_inputs/forever_energy.json"><code>assets/db_inputs/forever_energy.json</code></a>.
+Regenerate them with:</p>
+<pre><code class="language-sh">python3 tools/database/import_forever_energy.py --cache /tmp/forever-client-data
+</code></pre>
+<p>The primary table is
+<a href="https://wago.tools/db2/PowerType/csv?build=1.60.1.69913">Forever PowerType</a>.</p>
+<h2 id="spending-and-resource-talents">Spending and resource talents</h2>
+<p>The audited client costs match the engine before talents and set bonuses:</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Ability</th>
+<th align="right">Base Energy</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Shred / Backstab / Mutilate</td>
+<td align="right">60</td>
+</tr>
+<tr>
+<td>Claw / Sinister Strike</td>
+<td align="right">45</td>
+</tr>
+<tr>
+<td>Rake</td>
+<td align="right">40</td>
+</tr>
+<tr>
+<td>Ferocious Bite / Hemorrhage / Eviscerate</td>
+<td align="right">35</td>
+</tr>
+<tr>
+<td>Rip</td>
+<td align="right">30</td>
+</tr>
+<tr>
+<td>Slice and Dice / Rupture / Venom</td>
+<td align="right">25</td>
+</tr>
+<tr>
+<td>Tiger&#39;s Fury / Adrenaline Rush</td>
+<td align="right">0</td>
+</tr>
+</tbody></table></div>
+<p>Existing talent reductions remain: for example, Shredding Attacks brings Shred
+to 42, Ferocity brings Claw to 40 and Rake to 35, and Improved Sinister Strike
+brings Sinister Strike to 40. Flawless Execution reduces Eviscerate by 10; the
+Forever Tier 1 five-piece reduces it by another 5 when enabled.</p>
+<p>Relentless Strikes already restores 25 Energy with a 20%-per-combo-point chance.
+Vigor increases the maximum pool by 5/10; its verified effects do not justify
+adding retail Vigor&#39;s regeneration bonus. Gnome Expansive Mind and Eureka are
+already modeled separately. Tiger&#39;s Fury restores Energy through King of the
+Jungle; its client records do not establish an additional baseline 60-Energy
+grant without that talent.</p>
+<p>Seal Fate&#39;s 500-ms internal cooldown is present in the Forever client&#39;s
+<code>SpellAuraOptions</code> record for spell 14186 and already matches the engine.
+The two simultaneous Mutilate strikes therefore do not receive two separate
+Seal Fate procs in this model; that cooldown is not merely inherited guesswork.</p>
+<p>Ferocious Bite still consumes remaining Energy on a landed hit. Its extra-energy
+behavior and general refund rules are not being replaced with retail rules.
+All four benchmark profiles use explicit APLs, not the legacy scripted Cat
+rotation&#39;s Classic pooling estimates.</p>
+<h2 id="verification">Verification</h2>
+<p><code>sim/core/energy_test.go</code> covers cadence, average recovery, caps and wasted
+recovery, regeneration-rate transitions, and refunds under a discounted cost.
+The existing racial tests cover the Gnome pool and class-specific discounts.
+Haste gain/expiry settles the elapsed partial interval at its old rate; a change
+on an already-paid tick must not award that interval twice. Adrenaline Rush
+multiplies the haste-adjusted rate.</p>
+<h3 id="historical-timing-only-comparison">Historical timing-only comparison</h3>
+<p>All 31 supported race/build combinations were rerun at 5,000 iterations, using
+the exact frozen baseline profiles. No equipment, talents, rotation, buffs or
+hit-budget inputs changed. The new runs produced no APL warnings.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Build</th>
+<th>Representative race</th>
+<th align="right">Previous DPS</th>
+<th align="right">Smooth-recovery DPS</th>
+<th align="right">Change across races</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Feral</td>
+<td>Tauren</td>
+<td align="right">523.25</td>
+<td align="right">519.01</td>
+<td align="right">−0.81% to −0.70%</td>
+</tr>
+<tr>
+<td>Combat</td>
+<td>Orc</td>
+<td align="right">496.58</td>
+<td align="right">490.47</td>
+<td align="right">−1.40% to −1.18%</td>
+</tr>
+<tr>
+<td>Mutilate</td>
+<td>Orc</td>
+<td align="right">482.13</td>
+<td align="right">482.28</td>
+<td align="right">−1.70% to +0.03%</td>
+</tr>
+<tr>
+<td>Subtlety</td>
+<td>Orc</td>
+<td align="right">418.95</td>
+<td align="right">418.64</td>
+<td align="right">−0.22% to −0.04%</td>
+</tr>
+</tbody></table></div>
+<p>Very small changes are within sampling error. The largest Mutilate decrease is
+Gnome; it should be revisited during race-specific rotation testing.</p>
+<p>These are <strong>timing-correction comparisons, not newly optimized rankings</strong>.
+An APL&#39;s energy thresholds can behave differently with small resource increments.
+For example, the unchanged Feral baseline spent more Energy on Ferocious Bite
+and less on Rip after the correction. Smooth recovery is not automatically a
+damage increase with an unchanged rotation.</p>
+<p>Exact requests, metrics and comparisons:
+<a href="https://github.com/gunba/wow-forever-sim/blob/forever/artifacts/energy_cadence_5min.json"><code>energy_cadence_5min.json</code></a> and
+<a href="https://github.com/gunba/wow-forever-sim/blob/forever/artifacts/energy_cadence_5min.csv"><code>energy_cadence_5min.csv</code></a>.
+The reference remains <a href="https://github.com/gunba/wow-forever-sim/blob/forever/artifacts/forever_baseline_5min.json"><code>forever_baseline_5min.json</code></a>.</p>
+<p>The retained Feral build was then revalidated separately: 534.44–535.24 DPS,
+3.03–3.14% above the corresponding smooth-recovery baselines, with no mana-limited
+time or APL warnings. A fresh rotation screen found no further validated gain.
+<a href="https://github.com/gunba/wow-forever-sim/blob/forever/artifacts/optimization/feral.json"><code>optimization/feral.json</code></a> labels historical
+Classic-tick searches separately from the new comparison and rotation screen.
+These figures precede haste-scaled regeneration. The current engine and its
+retained profiles require new comparisons; historical figures are not the final
+ranking.</p>
+</article></body></html>

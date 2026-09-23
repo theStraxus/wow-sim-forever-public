@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Auto attacks - Forever DPS benchmark</title><style>
+body{background:#15171d;color:#e8e9ed;font:16px/1.6 system-ui,sans-serif;margin:0}
+a{color:#a9d8ff}
+.top{display:flex;gap:1.5rem;flex-wrap:wrap;padding:.8rem 2rem;background:#242834;border-bottom:1px solid #343945;font-size:.92rem}
+article{max-width:1150px;margin:0 auto;padding:1.5rem 2rem 4rem}
+h1,h2,h3,h4{line-height:1.25;margin:2rem 0 .8rem}h1{margin-top:.5rem}
+h2{border-bottom:1px solid #343945;padding-bottom:.3rem}
+.tw{overflow-x:auto;margin:1rem 0}
+table{border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{padding:.4rem .75rem;border-bottom:1px solid #343945;text-align:left;vertical-align:top}
+thead{background:#242834}tbody tr:hover{background:#1e212a}
+code{background:#242834;padding:.1rem .35rem;border-radius:4px;font-size:.9em}
+pre{background:#242834;padding:1rem;border-radius:6px;overflow-x:auto}pre code{background:none;padding:0}
+blockquote{margin:1rem 0;padding:.2rem 1rem;border-left:4px solid #4a5163;color:#b9c0cf}
+li{margin:.2rem 0}img{max-width:100%}
+</style></head>
+<body><nav class="top"><a href="./">&larr; Benchmark matrix</a><a href="auto_attack_audit.md">Raw markdown</a></nav>
+<article>
+<h1 id="auto-attacks">Auto attacks</h1>
+<p>Forever&#39;s auto-attack roles keep their weapon events running during ordinary
+ability casts. The engine no longer imports Classic shot pauses or an extra
+half-second wind-up.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Current behavior</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Auto Shot</td>
+<td>Independent instant weapon event on its normal hasted swing schedule; does not occupy the cast bar or GCD.</td>
+</tr>
+<tr>
+<td>Aimed Shot</td>
+<td>Two-second base cast; Auto Shot continues.</td>
+</tr>
+<tr>
+<td>Sniper Shot</td>
+<td>Four-second base cast; Auto Shot continues.</td>
+</tr>
+<tr>
+<td>Multi-Shot</td>
+<td>Client-listed half-second cast; Auto Shot continues.</td>
+</tr>
+<tr>
+<td>Volley</td>
+<td>Channel no longer explicitly delays ranged swings.</td>
+</tr>
+<tr>
+<td>Slam</td>
+<td>Does not reset or suspend weapon swings, including without Improved Slam.</td>
+</tr>
+<tr>
+<td>Enhancement spell casts</td>
+<td>Do not reset melee swings.</td>
+</tr>
+<tr>
+<td>Other ordinary casts in weapon roles</td>
+<td>Do not block white attacks or queued swing replacements.</td>
+</tr>
+<tr>
+<td>Caster roles</td>
+<td>No melee weaving during or between casts.</td>
+</tr>
+</tbody></table></div>
+<p>Continuous swings are a reported gameplay rule. Volley and the other ordinary
+weapon-role casts follow the same general model; they have not each been
+separately measured. Range, movement/range transitions, pet dismissal, stealth,
+form changes and equipment swaps retain their distinct restrictions.</p>
+<p>The auto-attack role classification includes Hunter, Rogue, Warrior, Feral,
+Enhancement and Retribution, plus the corresponding modeled tank roles. It does
+not make ordinary spells castable during another spell.</p>
+<p><code>sim/core/continuous_autos_test.go</code> checks readiness without allowing simultaneous
+special casts or caster melee. The benchmark&#39;s Hunter regression checks equal
+Auto Shot counts with and without repeated Aimed Shot/Multi-Shot, and checks
+the cast-time configuration.</p>
+<p>Earlier Hunter comparisons used the interrupted-shot model. They must not be
+presented as current results. The updated benchmark JSON records its auto-attack,
+shot-cast and Energy models explicitly.</p>
+</article></body></html>

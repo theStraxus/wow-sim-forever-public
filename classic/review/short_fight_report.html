@@ -1,0 +1,2445 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WoW: Forever — race DPS comparison for short fights (45, 60 and 75 seconds) - Forever DPS benchmark</title><style>
+body{background:#15171d;color:#e8e9ed;font:16px/1.6 system-ui,sans-serif;margin:0}
+a{color:#a9d8ff}
+.top{display:flex;gap:1.5rem;flex-wrap:wrap;padding:.8rem 2rem;background:#242834;border-bottom:1px solid #343945;font-size:.92rem}
+article{max-width:1150px;margin:0 auto;padding:1.5rem 2rem 4rem}
+h1,h2,h3,h4{line-height:1.25;margin:2rem 0 .8rem}h1{margin-top:.5rem}
+h2{border-bottom:1px solid #343945;padding-bottom:.3rem}
+.tw{overflow-x:auto;margin:1rem 0}
+table{border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{padding:.4rem .75rem;border-bottom:1px solid #343945;text-align:left;vertical-align:top}
+thead{background:#242834}tbody tr:hover{background:#1e212a}
+code{background:#242834;padding:.1rem .35rem;border-radius:4px;font-size:.9em}
+pre{background:#242834;padding:1rem;border-radius:6px;overflow-x:auto}pre code{background:none;padding:0}
+blockquote{margin:1rem 0;padding:.2rem 1rem;border-left:4px solid #4a5163;color:#b9c0cf}
+li{margin:.2rem 0}img{max-width:100%}
+</style></head>
+<body><nav class="top"><a href="./">&larr; Benchmark matrix</a><a href="short_fight_report.md">Raw markdown</a></nav>
+<article>
+<h1 id="wow-forever--race-dps-comparison-for-short-fights-45-60-and-75-seconds">WoW: Forever — race DPS comparison for short fights (45, 60 and 75 seconds)</h1>
+<p>Generated 2026-09-21 from the fork&#39;s benchmark (<code>tools/forever_bench</code>), including the Stoneform and Shatter Curse racial changes, using beta client build 1.60.1.69913 data. 5,000 iterations per result, seed 20291951, single target.</p>
+<p><strong>Read the caveats first. The differences between races are small, and Undead&#39;s lead in several specs depends on one unverified racial.</strong></p>
+<h2 id="caveats">Caveats</h2>
+<ol>
+<li><strong>Small spreads.</strong> At 60 seconds with per-race gear, the gap between the best and worst race in a spec runs from 1.3% to 11.4% (median 2.0%). Treat the results as tiers, not a strict ranking.</li>
+<li><strong>Undead&#39;s lead is one unverified racial.</strong> Touch of the Grave (a proc with a 5% chance per hit for melee classes and 10% for casters, dealing Shadow damage equal to 5% of your max health, per the beta client&#39;s spell data) is worth 1.2–4.6% of an Undead&#39;s damage at 60 seconds. Without it, Undead drops into the bottom half in 14 of 15 specs (the exception is Subtlety Rogue (4 of 9)); see the sensitivity table. Nobody has confirmed the proc behavior in game.</li>
+<li><strong>Gear.</strong> &quot;Same gear&quot; gives every race an identical starting loadout. &quot;Per-race gear&quot; lets a search pick weapons and pieces for each race (an Orc picks up an axe, a Dwarf a mace). That search was run for a 5-minute fight, and its loadouts are reused unchanged here, so they may not be the best choice for a 45–75 second fight. The pool includes PvP &quot;Premier High Warlord&#39;s&quot; items whose launch availability is unverified, and the search can leave races a fraction of a percent apart for reasons unrelated to the racial.</li>
+<li><strong>Hit is normalized</strong> to the same cap for every race, so a racial that grants hit (Tauren) is paid for and not free damage.</li>
+<li><strong>Setup.</strong> Level 60 characters, a level 63 target with 3,731 armor (an assumption, not a measured beta value), a fixed external buff and debuff package, no world buffs, no raid composition. These are starting builds with generated gear, not best-in-slot. Weapon skill is still valued at its full Classic worth.</li>
+<li><strong>Burst-window effects.</strong> Fights this short reward cooldown racials (Blood Fury, Berserking, Elune&#39;s Light, Eureka) more than a long fight does. How much depends on where in the fight they land, and the rotations are the fork&#39;s defaults, not tuned for these lengths.</li>
+<li><strong>DPS only.</strong> Tanks and healers aren&#39;t in this benchmark.</li>
+</ol>
+<h2 id="how-to-read-the-tables">How to read the tables</h2>
+<ul>
+<li>The six scenarios: fight length (45, 60 or 75 seconds) × gear (same for all races, or searched per race).</li>
+<li>Each cell is the race&#39;s DPS and its gap to the best race in that column. <strong>Bold</strong> marks the best.</li>
+<li><strong>≈</strong> means the gap is within 2× the combined statistical error of the best, so the sim can&#39;t tell them apart. It reflects sim noise only, not the gear-search noise in caveat 3.</li>
+<li><strong>A</strong> or <strong>H</strong> is the race&#39;s faction. Rows are ordered by the 60-second, per-race-gear column.</li>
+</ul>
+<h2 id="class-overview">Class overview</h2>
+<p>Mean of each race&#39;s share of the best DPS, averaged over every spec in the class and all six scenarios (100.0 means best everywhere).</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Class</th>
+<th>Races, best to worst (mean % of each spec&#39;s best DPS, all specs and all 6 scenarios)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Warrior</td>
+<td>Orc 99.8 · Undead 99.4 · Troll 98.6 · Night Elf 98.5 · Human 98.3 · Tauren 98.0 · Gnome 97.9 · Windshaper 97.8 · High Order 97.8 · Dwarf 97.6</td>
+</tr>
+<tr>
+<td>Paladin</td>
+<td>Undead 100.0 · Human 98.2 · Dwarf 98.0</td>
+</tr>
+<tr>
+<td>Rogue</td>
+<td>Undead 99.9 · Night Elf 99.1 · Gnome 97.9 · Orc 97.5 · Human 97.2 · Dwarf 96.2 · Troll 95.9 · Windshaper 95.2 · High Order 95.2</td>
+</tr>
+<tr>
+<td>Hunter</td>
+<td>Night Elf 100.0 · Orc 98.8 · Troll 98.6 · Human 98.5 · Windshaper 98.0 · High Order 98.0 · Tauren 97.5 · Dwarf 97.1</td>
+</tr>
+<tr>
+<td>Mage</td>
+<td>Undead 99.9 · Orc 99.4 · Gnome 99.1 · Troll 98.8 · High Order 98.7 · Human 98.7</td>
+</tr>
+<tr>
+<td>Warlock</td>
+<td>Gnome 99.8 · Undead 99.5 · Orc 99.3 · Human 98.6 · Troll 97.9</td>
+</tr>
+<tr>
+<td>Priest</td>
+<td>Night Elf 100.0 · Gnome 99.8 · Undead 99.0 · Dwarf 98.7 · Human 98.4 · Troll 98.3</td>
+</tr>
+<tr>
+<td>Shaman</td>
+<td>Orc 100.0 · Tauren 99.0 · Troll 99.0 · Dwarf 98.8 · Windshaper 98.5</td>
+</tr>
+<tr>
+<td>Druid</td>
+<td>Night Elf 100.0 · Tauren 98.9 · Windshaper 98.5 · High Order 98.5</td>
+</tr>
+</tbody></table></div>
+<h2 id="best-race-per-spec">Best race per spec</h2>
+<p>An &quot;≈&quot; lists races statistically tied with the best in that scenario.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Spec</th>
+<th>45 s, same gear</th>
+<th>60 s, same gear</th>
+<th>75 s, same gear</th>
+<th>45 s, per-race gear</th>
+<th>60 s, per-race gear</th>
+<th>75 s, per-race gear</th>
+<th align="right">Spread (60 s, per-race gear)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Fury Warrior</td>
+<td>Orc</td>
+<td>Orc ≈ Undead</td>
+<td>Undead ≈ Orc</td>
+<td>Orc</td>
+<td>Orc</td>
+<td>Orc</td>
+<td align="right">3.6%</td>
+</tr>
+<tr>
+<td>Arms Warrior</td>
+<td>Undead ≈ Night Elf</td>
+<td>Undead</td>
+<td>Undead</td>
+<td>Night Elf ≈ Orc</td>
+<td>Night Elf ≈ Orc</td>
+<td>Night Elf ≈ Orc, Undead</td>
+<td align="right">2.0%</td>
+</tr>
+<tr>
+<td>Retribution Paladin</td>
+<td>Undead</td>
+<td>Undead</td>
+<td>Undead</td>
+<td>Undead</td>
+<td>Undead</td>
+<td>Undead</td>
+<td align="right">1.7%</td>
+</tr>
+<tr>
+<td>Combat Rogue</td>
+<td>Night Elf</td>
+<td>Undead ≈ Night Elf</td>
+<td>Undead</td>
+<td>Undead</td>
+<td>Undead</td>
+<td>Undead</td>
+<td align="right">3.9%</td>
+</tr>
+<tr>
+<td>Mutilate Rogue</td>
+<td>Gnome ≈ Undead, Night Elf</td>
+<td>Undead</td>
+<td>Undead</td>
+<td>Gnome</td>
+<td>Undead</td>
+<td>Undead</td>
+<td align="right">4.2%</td>
+</tr>
+<tr>
+<td>Subtlety Rogue</td>
+<td>Night Elf ≈ Undead</td>
+<td>Undead</td>
+<td>Undead</td>
+<td>Undead</td>
+<td>Undead</td>
+<td>Undead</td>
+<td align="right">11.4%</td>
+</tr>
+<tr>
+<td>Beast Mastery Hunter</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td align="right">2.5%</td>
+</tr>
+<tr>
+<td>Marksmanship Hunter</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td align="right">2.9%</td>
+</tr>
+<tr>
+<td>Survival Hunter</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td>Night Elf ≈ Orc, Human</td>
+<td align="right">3.1%</td>
+</tr>
+<tr>
+<td>Arcane Mage</td>
+<td>Undead</td>
+<td>Undead</td>
+<td>Undead</td>
+<td>Undead ≈ Orc, Gnome</td>
+<td>Undead</td>
+<td>Undead</td>
+<td align="right">2.1%</td>
+</tr>
+<tr>
+<td>Fire Mage</td>
+<td>Orc ≈ Undead</td>
+<td>Undead ≈ Orc, High Order</td>
+<td>Undead</td>
+<td>Orc ≈ Undead</td>
+<td>Orc ≈ Undead, High Order</td>
+<td>Undead ≈ Orc</td>
+<td align="right">1.8%</td>
+</tr>
+<tr>
+<td>Frost Mage</td>
+<td>Troll</td>
+<td>Undead ≈ Troll, Human</td>
+<td>Human ≈ Troll, Undead</td>
+<td>Troll</td>
+<td>Troll ≈ Undead, Gnome</td>
+<td>Undead ≈ Troll, Gnome</td>
+<td align="right">1.5%</td>
+</tr>
+<tr>
+<td>Affliction Warlock</td>
+<td>Human ≈ Orc, Gnome</td>
+<td>Gnome</td>
+<td>Gnome</td>
+<td>Orc ≈ Troll, Gnome</td>
+<td>Gnome</td>
+<td>Gnome</td>
+<td align="right">2.4%</td>
+</tr>
+<tr>
+<td>DS/Ruin Warlock</td>
+<td>Troll ≈ Orc, Undead, Human, Gnome</td>
+<td>Human ≈ Undead</td>
+<td>Gnome</td>
+<td>Troll ≈ Orc</td>
+<td>Orc ≈ Undead, Gnome</td>
+<td>Gnome</td>
+<td align="right">1.7%</td>
+</tr>
+<tr>
+<td>Demonic Pact Warlock</td>
+<td>Undead ≈ Orc, Human</td>
+<td>Undead ≈ Human</td>
+<td>Gnome ≈ Human</td>
+<td>Orc ≈ Undead</td>
+<td>Undead ≈ Orc</td>
+<td>Gnome ≈ Orc</td>
+<td align="right">1.8%</td>
+</tr>
+<tr>
+<td>Destruction Warlock</td>
+<td>Undead</td>
+<td>Undead ≈ Gnome</td>
+<td>Undead ≈ Gnome</td>
+<td>Undead</td>
+<td>Undead</td>
+<td>Gnome</td>
+<td align="right">4.5%</td>
+</tr>
+<tr>
+<td>Shadow Priest</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td>Undead</td>
+<td>Night Elf ≈ Gnome</td>
+<td>Night Elf ≈ Gnome</td>
+<td>Undead ≈ Night Elf</td>
+<td align="right">2.0%</td>
+</tr>
+<tr>
+<td>Smite Priest</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td>Night Elf ≈ Gnome</td>
+<td>Night Elf ≈ Gnome</td>
+<td>Night Elf ≈ Gnome</td>
+<td>Night Elf ≈ Gnome</td>
+<td align="right">2.9%</td>
+</tr>
+<tr>
+<td>Enhancement Shaman</td>
+<td>Orc</td>
+<td>Orc</td>
+<td>Orc</td>
+<td>Orc</td>
+<td>Orc</td>
+<td>Orc ≈ Dwarf</td>
+<td align="right">1.9%</td>
+</tr>
+<tr>
+<td>Elemental Shaman</td>
+<td>Troll ≈ Orc</td>
+<td>Orc</td>
+<td>Orc</td>
+<td>Orc</td>
+<td>Orc</td>
+<td>Orc</td>
+<td align="right">1.7%</td>
+</tr>
+<tr>
+<td>Stormcaller Shaman</td>
+<td>Orc</td>
+<td>Orc</td>
+<td>Orc</td>
+<td>Orc</td>
+<td>Orc</td>
+<td>Orc</td>
+<td align="right">1.7%</td>
+</tr>
+<tr>
+<td>Balance Druid</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td align="right">1.3%</td>
+</tr>
+<tr>
+<td>Feral Druid</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td>Night Elf</td>
+<td align="right">1.4%</td>
+</tr>
+</tbody></table></div>
+<h3 id="consistency-across-scenarios">Consistency across scenarios</h3>
+<p>Races that are the best, or tied with the best, in every scenario or in 5 of the 6.</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Spec</th>
+<th>Top or tied in all 6 scenarios</th>
+<th>Top or tied in 5 of 6</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Fury Warrior</td>
+<td>Orc</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Arms Warrior</td>
+<td><em>none</em></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Retribution Paladin</td>
+<td>Undead</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Combat Rogue</td>
+<td><em>none</em></td>
+<td>Undead</td>
+</tr>
+<tr>
+<td>Mutilate Rogue</td>
+<td><em>none</em></td>
+<td>Undead</td>
+</tr>
+<tr>
+<td>Subtlety Rogue</td>
+<td>Undead</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Beast Mastery Hunter</td>
+<td>Night Elf</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Marksmanship Hunter</td>
+<td>Night Elf</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Survival Hunter</td>
+<td>Night Elf</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Arcane Mage</td>
+<td>Undead</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Fire Mage</td>
+<td>Undead</td>
+<td>Orc</td>
+</tr>
+<tr>
+<td>Frost Mage</td>
+<td>Troll</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Affliction Warlock</td>
+<td>Gnome</td>
+<td>—</td>
+</tr>
+<tr>
+<td>DS/Ruin Warlock</td>
+<td><em>none</em></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Demonic Pact Warlock</td>
+<td><em>none</em></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Destruction Warlock</td>
+<td><em>none</em></td>
+<td>Undead</td>
+</tr>
+<tr>
+<td>Shadow Priest</td>
+<td><em>none</em></td>
+<td>Night Elf</td>
+</tr>
+<tr>
+<td>Smite Priest</td>
+<td>Night Elf</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Enhancement Shaman</td>
+<td>Orc</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Elemental Shaman</td>
+<td>Orc</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Stormcaller Shaman</td>
+<td>Orc</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Balance Druid</td>
+<td>Night Elf</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Feral Druid</td>
+<td>Night Elf</td>
+<td>—</td>
+</tr>
+</tbody></table></div>
+<h2 id="sensitivity-undead-without-touch-of-the-grave">Sensitivity: Undead without Touch of the Grave</h2>
+<p>Touch of the Grave&#39;s damage per second at 60 seconds with per-race gear, taken from the simulation&#39;s own per-ability record, and Undead&#39;s rank if that damage is subtracted (an approximation that ignores any knock-on effects).</p>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Spec</th>
+<th align="right">Undead DPS</th>
+<th align="right">Touch of the Grave</th>
+<th align="right">Share</th>
+<th align="right">Undead rank with it</th>
+<th align="right">Undead rank without it</th>
+<th>Best non-Undead race (DPS)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Fury Warrior</td>
+<td align="right">1134</td>
+<td align="right">28.5</td>
+<td align="right">2.5%</td>
+<td align="right">2 of 10</td>
+<td align="right">10 of 10</td>
+<td>Orc (1148)</td>
+</tr>
+<tr>
+<td>Arms Warrior</td>
+<td align="right">870</td>
+<td align="right">15.6</td>
+<td align="right">1.8%</td>
+<td align="right">3 of 10</td>
+<td align="right">10 of 10</td>
+<td>Night Elf (876)</td>
+</tr>
+<tr>
+<td>Retribution Paladin</td>
+<td align="right">1104</td>
+<td align="right">18.7</td>
+<td align="right">1.7%</td>
+<td align="right">1 of 3</td>
+<td align="right">2 of 3</td>
+<td>Human (1088)</td>
+</tr>
+<tr>
+<td>Combat Rogue</td>
+<td align="right">743</td>
+<td align="right">28.6</td>
+<td align="right">3.9%</td>
+<td align="right">1 of 9</td>
+<td align="right">9 of 9</td>
+<td>Night Elf (735)</td>
+</tr>
+<tr>
+<td>Mutilate Rogue</td>
+<td align="right">691</td>
+<td align="right">30.8</td>
+<td align="right">4.5%</td>
+<td align="right">1 of 9</td>
+<td align="right">9 of 9</td>
+<td>Gnome (688)</td>
+</tr>
+<tr>
+<td>Subtlety Rogue</td>
+<td align="right">641</td>
+<td align="right">29.5</td>
+<td align="right">4.6%</td>
+<td align="right">1 of 9</td>
+<td align="right">4 of 9</td>
+<td>Night Elf (627)</td>
+</tr>
+<tr>
+<td>Arcane Mage</td>
+<td align="right">742</td>
+<td align="right">15.6</td>
+<td align="right">2.1%</td>
+<td align="right">1 of 6</td>
+<td align="right">6 of 6</td>
+<td>Orc (737)</td>
+</tr>
+<tr>
+<td>Fire Mage</td>
+<td align="right">901</td>
+<td align="right">10.7</td>
+<td align="right">1.2%</td>
+<td align="right">2 of 6</td>
+<td align="right">4 of 6</td>
+<td>Orc (904)</td>
+</tr>
+<tr>
+<td>Frost Mage</td>
+<td align="right">686</td>
+<td align="right">8.3</td>
+<td align="right">1.2%</td>
+<td align="right">2 of 6</td>
+<td align="right">5 of 6</td>
+<td>Troll (686)</td>
+</tr>
+<tr>
+<td>Affliction Warlock</td>
+<td align="right">821</td>
+<td align="right">10.9</td>
+<td align="right">1.3%</td>
+<td align="right">3 of 5</td>
+<td align="right">4 of 5</td>
+<td>Gnome (828)</td>
+</tr>
+<tr>
+<td>DS/Ruin Warlock</td>
+<td align="right">779</td>
+<td align="right">14.2</td>
+<td align="right">1.8%</td>
+<td align="right">2 of 5</td>
+<td align="right">5 of 5</td>
+<td>Orc (779)</td>
+</tr>
+<tr>
+<td>Demonic Pact Warlock</td>
+<td align="right">802</td>
+<td align="right">12.6</td>
+<td align="right">1.6%</td>
+<td align="right">1 of 5</td>
+<td align="right">3 of 5</td>
+<td>Orc (800)</td>
+</tr>
+<tr>
+<td>Destruction Warlock</td>
+<td align="right">807</td>
+<td align="right">14.0</td>
+<td align="right">1.7%</td>
+<td align="right">1 of 5</td>
+<td align="right">4 of 5</td>
+<td>Gnome (802)</td>
+</tr>
+<tr>
+<td>Shadow Priest</td>
+<td align="right">752</td>
+<td align="right">11.5</td>
+<td align="right">1.5%</td>
+<td align="right">3 of 6</td>
+<td align="right">5 of 6</td>
+<td>Night Elf (754)</td>
+</tr>
+<tr>
+<td>Smite Priest</td>
+<td align="right">637</td>
+<td align="right">8.3</td>
+<td align="right">1.3%</td>
+<td align="right">6 of 6</td>
+<td align="right">6 of 6</td>
+<td>Night Elf (655)</td>
+</tr>
+</tbody></table></div>
+<h2 id="notes-on-specific-specs">Notes on specific specs</h2>
+<ul>
+<li><strong>Subtlety Rogue is the most race-sensitive spec here</strong>, with a gap of 11.4% between best and worst at 60 seconds with per-race gear. Troll, Windshaper and High Order are the bottom three in all six scenarios. They are the three races with no crit or damage racial (Troll has Berserking and the Skyborne have 1% haste). In the runs, the higher-scoring races cast about two more Hemorrhage per 60 seconds. I haven&#39;t isolated why, so treat the size of the gap with caution.</li>
+</ul>
+<h2 id="full-tables">Full tables</h2>
+<h3 id="warrior">Warrior</h3>
+<h4 id="fury-warrior">Fury Warrior</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Orc</td>
+<td>H</td>
+<td align="right"><strong>1083</strong> (best)</td>
+<td align="right"><strong>989</strong> (best)</td>
+<td align="right">940 (−0.2%) ≈</td>
+<td align="right"><strong>1242</strong> (best)</td>
+<td align="right"><strong>1148</strong> (best)</td>
+<td align="right"><strong>1094</strong> (best)</td>
+</tr>
+<tr>
+<td>Undead</td>
+<td>H</td>
+<td align="right">1071 (−1.1%)</td>
+<td align="right">987 (−0.2%) ≈</td>
+<td align="right"><strong>942</strong> (best)</td>
+<td align="right">1220 (−1.8%)</td>
+<td align="right">1134 (−1.2%)</td>
+<td align="right">1086 (−0.8%)</td>
+</tr>
+<tr>
+<td>Troll</td>
+<td>H</td>
+<td align="right">1071 (−1.1%)</td>
+<td align="right">980 (−0.9%)</td>
+<td align="right">933 (−1.0%)</td>
+<td align="right">1219 (−1.9%)</td>
+<td align="right">1129 (−1.6%)</td>
+<td align="right">1079 (−1.4%)</td>
+</tr>
+<tr>
+<td>Human</td>
+<td>A</td>
+<td align="right">1063 (−1.8%)</td>
+<td align="right">978 (−1.1%)</td>
+<td align="right">935 (−0.7%)</td>
+<td align="right">1211 (−2.6%)</td>
+<td align="right">1126 (−1.9%)</td>
+<td align="right">1079 (−1.4%)</td>
+</tr>
+<tr>
+<td>Windshaper</td>
+<td>H</td>
+<td align="right">1057 (−2.4%)</td>
+<td align="right">970 (−1.9%)</td>
+<td align="right">926 (−1.8%)</td>
+<td align="right">1199 (−3.5%)</td>
+<td align="right">1114 (−2.9%)</td>
+<td align="right">1064 (−2.8%)</td>
+</tr>
+<tr>
+<td>High Order</td>
+<td>A</td>
+<td align="right">1057 (−2.4%)</td>
+<td align="right">970 (−1.9%)</td>
+<td align="right">926 (−1.8%)</td>
+<td align="right">1199 (−3.5%)</td>
+<td align="right">1114 (−2.9%)</td>
+<td align="right">1064 (−2.8%)</td>
+</tr>
+<tr>
+<td>Night Elf</td>
+<td>A</td>
+<td align="right">1053 (−2.8%)</td>
+<td align="right">968 (−2.2%)</td>
+<td align="right">923 (−2.0%)</td>
+<td align="right">1198 (−3.6%)</td>
+<td align="right">1113 (−3.0%)</td>
+<td align="right">1065 (−2.7%)</td>
+</tr>
+<tr>
+<td>Dwarf</td>
+<td>A</td>
+<td align="right">1056 (−2.4%)</td>
+<td align="right">971 (−1.8%)</td>
+<td align="right">928 (−1.5%)</td>
+<td align="right">1195 (−3.8%)</td>
+<td align="right">1109 (−3.4%)</td>
+<td align="right">1064 (−2.8%)</td>
+</tr>
+<tr>
+<td>Tauren</td>
+<td>H</td>
+<td align="right">1060 (−2.1%)</td>
+<td align="right">974 (−1.5%)</td>
+<td align="right">929 (−1.3%)</td>
+<td align="right">1194 (−3.9%)</td>
+<td align="right">1108 (−3.4%)</td>
+<td align="right">1063 (−2.9%)</td>
+</tr>
+<tr>
+<td>Gnome</td>
+<td>A</td>
+<td align="right">1058 (−2.3%)</td>
+<td align="right">969 (−2.0%)</td>
+<td align="right">924 (−2.0%)</td>
+<td align="right">1198 (−3.6%)</td>
+<td align="right">1108 (−3.5%)</td>
+<td align="right">1062 (−3.0%)</td>
+</tr>
+</tbody></table></div>
+<h4 id="arms-warrior">Arms Warrior</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Night Elf</td>
+<td>A</td>
+<td align="right">766 (−0.3%) ≈</td>
+<td align="right">734 (−0.6%)</td>
+<td align="right">723 (−0.9%)</td>
+<td align="right"><strong>922</strong> (best)</td>
+<td align="right"><strong>876</strong> (best)</td>
+<td align="right"><strong>849</strong> (best)</td>
+</tr>
+<tr>
+<td>Orc</td>
+<td>H</td>
+<td align="right">765 (−0.4%)</td>
+<td align="right">734 (−0.7%)</td>
+<td align="right">724 (−0.8%)</td>
+<td align="right">921 (−0.1%) ≈</td>
+<td align="right">875 (−0.1%) ≈</td>
+<td align="right">847 (−0.2%) ≈</td>
+</tr>
+<tr>
+<td>Undead</td>
+<td>H</td>
+<td align="right"><strong>768</strong> (best)</td>
+<td align="right"><strong>739</strong> (best)</td>
+<td align="right"><strong>730</strong> (best)</td>
+<td align="right">911 (−1.1%)</td>
+<td align="right">870 (−0.6%)</td>
+<td align="right">847 (−0.3%) ≈</td>
+</tr>
+<tr>
+<td>Human</td>
+<td>A</td>
+<td align="right">748 (−2.7%)</td>
+<td align="right">721 (−2.3%)</td>
+<td align="right">713 (−2.4%)</td>
+<td align="right">907 (−1.6%)</td>
+<td align="right">868 (−0.9%)</td>
+<td align="right">844 (−0.6%)</td>
+</tr>
+<tr>
+<td>Gnome</td>
+<td>A</td>
+<td align="right">756 (−1.5%)</td>
+<td align="right">726 (−1.8%)</td>
+<td align="right">718 (−1.7%)</td>
+<td align="right">908 (−1.5%)</td>
+<td align="right">865 (−1.2%)</td>
+<td align="right">839 (−1.2%)</td>
+</tr>
+<tr>
+<td>Tauren</td>
+<td>H</td>
+<td align="right">754 (−1.8%)</td>
+<td align="right">727 (−1.5%)</td>
+<td align="right">719 (−1.5%)</td>
+<td align="right">906 (−1.7%)</td>
+<td align="right">864 (−1.3%)</td>
+<td align="right">840 (−1.1%)</td>
+</tr>
+<tr>
+<td>Windshaper</td>
+<td>H</td>
+<td align="right">752 (−2.2%)</td>
+<td align="right">726 (−1.7%)</td>
+<td align="right">716 (−1.9%)</td>
+<td align="right">902 (−2.1%)</td>
+<td align="right">861 (−1.6%)</td>
+<td align="right">838 (−1.4%)</td>
+</tr>
+<tr>
+<td>High Order</td>
+<td>A</td>
+<td align="right">752 (−2.2%)</td>
+<td align="right">726 (−1.7%)</td>
+<td align="right">716 (−1.9%)</td>
+<td align="right">902 (−2.1%)</td>
+<td align="right">861 (−1.6%)</td>
+<td align="right">838 (−1.4%)</td>
+</tr>
+<tr>
+<td>Troll</td>
+<td>H</td>
+<td align="right">758 (−1.3%)</td>
+<td align="right">729 (−1.3%)</td>
+<td align="right">720 (−1.3%)</td>
+<td align="right">905 (−1.8%)</td>
+<td align="right">860 (−1.7%)</td>
+<td align="right">840 (−1.0%)</td>
+</tr>
+<tr>
+<td>Dwarf</td>
+<td>A</td>
+<td align="right">748 (−2.6%)</td>
+<td align="right">722 (−2.3%)</td>
+<td align="right">713 (−2.3%)</td>
+<td align="right">901 (−2.2%)</td>
+<td align="right">859 (−1.9%)</td>
+<td align="right">836 (−1.6%)</td>
+</tr>
+</tbody></table></div>
+<h3 id="paladin">Paladin</h3>
+<h4 id="retribution-paladin">Retribution Paladin</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Undead</td>
+<td>H</td>
+<td align="right"><strong>911</strong> (best)</td>
+<td align="right"><strong>914</strong> (best)</td>
+<td align="right"><strong>915</strong> (best)</td>
+<td align="right"><strong>1110</strong> (best)</td>
+<td align="right"><strong>1104</strong> (best)</td>
+<td align="right"><strong>1108</strong> (best)</td>
+</tr>
+<tr>
+<td>Human</td>
+<td>A</td>
+<td align="right">896 (−1.7%)</td>
+<td align="right">898 (−1.8%)</td>
+<td align="right">899 (−1.7%)</td>
+<td align="right">1087 (−2.1%)</td>
+<td align="right">1088 (−1.5%)</td>
+<td align="right">1084 (−2.1%)</td>
+</tr>
+<tr>
+<td>Dwarf</td>
+<td>A</td>
+<td align="right">894 (−1.9%)</td>
+<td align="right">896 (−2.0%)</td>
+<td align="right">898 (−1.9%)</td>
+<td align="right">1085 (−2.2%)</td>
+<td align="right">1086 (−1.7%)</td>
+<td align="right">1082 (−2.3%)</td>
+</tr>
+</tbody></table></div>
+<h3 id="rogue">Rogue</h3>
+<h4 id="combat-rogue">Combat Rogue</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Undead</td>
+<td>H</td>
+<td align="right">664 (−0.4%)</td>
+<td align="right"><strong>620</strong> (best)</td>
+<td align="right"><strong>594</strong> (best)</td>
+<td align="right"><strong>794</strong> (best)</td>
+<td align="right"><strong>743</strong> (best)</td>
+<td align="right"><strong>712</strong> (best)</td>
+</tr>
+<tr>
+<td>Night Elf</td>
+<td>A</td>
+<td align="right"><strong>667</strong> (best)</td>
+<td align="right">619 (−0.2%) ≈</td>
+<td align="right">589 (−0.8%)</td>
+<td align="right">791 (−0.4%)</td>
+<td align="right">735 (−1.1%)</td>
+<td align="right">702 (−1.4%)</td>
+</tr>
+<tr>
+<td>Gnome</td>
+<td>A</td>
+<td align="right">664 (−0.4%)</td>
+<td align="right">616 (−0.7%)</td>
+<td align="right">587 (−1.1%)</td>
+<td align="right">785 (−1.0%)</td>
+<td align="right">731 (−1.6%)</td>
+<td align="right">698 (−2.0%)</td>
+</tr>
+<tr>
+<td>Troll</td>
+<td>H</td>
+<td align="right">662 (−0.8%)</td>
+<td align="right">614 (−0.9%)</td>
+<td align="right">586 (−1.3%)</td>
+<td align="right">784 (−1.2%)</td>
+<td align="right">730 (−1.7%)</td>
+<td align="right">697 (−2.0%)</td>
+</tr>
+<tr>
+<td>Human</td>
+<td>A</td>
+<td align="right">653 (−2.0%)</td>
+<td align="right">610 (−1.6%)</td>
+<td align="right">584 (−1.7%)</td>
+<td align="right">778 (−2.0%)</td>
+<td align="right">727 (−2.1%)</td>
+<td align="right">697 (−2.1%)</td>
+</tr>
+<tr>
+<td>Orc</td>
+<td>H</td>
+<td align="right">654 (−1.9%)</td>
+<td align="right">609 (−1.8%)</td>
+<td align="right">581 (−2.2%)</td>
+<td align="right">780 (−1.7%)</td>
+<td align="right">727 (−2.2%)</td>
+<td align="right">695 (−2.4%)</td>
+</tr>
+<tr>
+<td>Windshaper</td>
+<td>H</td>
+<td align="right">657 (−1.5%)</td>
+<td align="right">612 (−1.3%)</td>
+<td align="right">585 (−1.5%)</td>
+<td align="right">774 (−2.5%)</td>
+<td align="right">724 (−2.5%)</td>
+<td align="right">694 (−2.5%)</td>
+</tr>
+<tr>
+<td>High Order</td>
+<td>A</td>
+<td align="right">657 (−1.5%)</td>
+<td align="right">612 (−1.3%)</td>
+<td align="right">585 (−1.5%)</td>
+<td align="right">774 (−2.5%)</td>
+<td align="right">724 (−2.5%)</td>
+<td align="right">694 (−2.5%)</td>
+</tr>
+<tr>
+<td>Dwarf</td>
+<td>A</td>
+<td align="right">647 (−3.0%)</td>
+<td align="right">604 (−2.6%)</td>
+<td align="right">578 (−2.7%)</td>
+<td align="right">765 (−3.6%)</td>
+<td align="right">715 (−3.8%)</td>
+<td align="right">685 (−3.8%)</td>
+</tr>
+</tbody></table></div>
+<h4 id="mutilate-rogue">Mutilate Rogue</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Undead</td>
+<td>H</td>
+<td align="right">616 (−0.2%) ≈</td>
+<td align="right"><strong>592</strong> (best)</td>
+<td align="right"><strong>577</strong> (best)</td>
+<td align="right">716 (−0.7%)</td>
+<td align="right"><strong>691</strong> (best)</td>
+<td align="right"><strong>675</strong> (best)</td>
+</tr>
+<tr>
+<td>Gnome</td>
+<td>A</td>
+<td align="right"><strong>617</strong> (best)</td>
+<td align="right">587 (−0.7%)</td>
+<td align="right">569 (−1.3%)</td>
+<td align="right"><strong>721</strong> (best)</td>
+<td align="right">688 (−0.5%)</td>
+<td align="right">669 (−1.0%)</td>
+</tr>
+<tr>
+<td>Night Elf</td>
+<td>A</td>
+<td align="right">617 (−0.1%) ≈</td>
+<td align="right">587 (−0.8%)</td>
+<td align="right">569 (−1.3%)</td>
+<td align="right">718 (−0.4%)</td>
+<td align="right">687 (−0.7%)</td>
+<td align="right">667 (−1.2%)</td>
+</tr>
+<tr>
+<td>Orc</td>
+<td>H</td>
+<td align="right">601 (−2.6%)</td>
+<td align="right">575 (−2.8%)</td>
+<td align="right">559 (−3.1%)</td>
+<td align="right">701 (−2.8%)</td>
+<td align="right">673 (−2.7%)</td>
+<td align="right">656 (−2.9%)</td>
+</tr>
+<tr>
+<td>Windshaper</td>
+<td>H</td>
+<td align="right">596 (−3.4%)</td>
+<td align="right">573 (−3.1%)</td>
+<td align="right">559 (−3.1%)</td>
+<td align="right">697 (−3.3%)</td>
+<td align="right">671 (−3.0%)</td>
+<td align="right">655 (−2.9%)</td>
+</tr>
+<tr>
+<td>High Order</td>
+<td>A</td>
+<td align="right">596 (−3.4%)</td>
+<td align="right">573 (−3.1%)</td>
+<td align="right">559 (−3.1%)</td>
+<td align="right">697 (−3.3%)</td>
+<td align="right">671 (−3.0%)</td>
+<td align="right">655 (−2.9%)</td>
+</tr>
+<tr>
+<td>Troll</td>
+<td>H</td>
+<td align="right">602 (−2.5%)</td>
+<td align="right">576 (−2.7%)</td>
+<td align="right">560 (−2.9%)</td>
+<td align="right">700 (−3.0%)</td>
+<td align="right">670 (−3.1%)</td>
+<td align="right">654 (−3.2%)</td>
+</tr>
+<tr>
+<td>Human</td>
+<td>A</td>
+<td align="right">593 (−4.0%)</td>
+<td align="right">569 (−3.9%)</td>
+<td align="right">554 (−3.9%)</td>
+<td align="right">690 (−4.4%)</td>
+<td align="right">664 (−4.0%)</td>
+<td align="right">649 (−3.9%)</td>
+</tr>
+<tr>
+<td>Dwarf</td>
+<td>A</td>
+<td align="right">591 (−4.2%)</td>
+<td align="right">568 (−4.1%)</td>
+<td align="right">553 (−4.1%)</td>
+<td align="right">689 (−4.4%)</td>
+<td align="right">664 (−4.0%)</td>
+<td align="right">648 (−4.0%)</td>
+</tr>
+</tbody></table></div>
+<h4 id="subtlety-rogue">Subtlety Rogue</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Undead</td>
+<td>H</td>
+<td align="right">521 (−0.2%) ≈</td>
+<td align="right"><strong>503</strong> (best)</td>
+<td align="right"><strong>492</strong> (best)</td>
+<td align="right"><strong>671</strong> (best)</td>
+<td align="right"><strong>641</strong> (best)</td>
+<td align="right"><strong>625</strong> (best)</td>
+</tr>
+<tr>
+<td>Night Elf</td>
+<td>A</td>
+<td align="right"><strong>522</strong> (best)</td>
+<td align="right">500 (−0.6%)</td>
+<td align="right">487 (−1.1%)</td>
+<td align="right">662 (−1.3%)</td>
+<td align="right">627 (−2.1%)</td>
+<td align="right">608 (−2.7%)</td>
+</tr>
+<tr>
+<td>Human</td>
+<td>A</td>
+<td align="right">512 (−1.9%)</td>
+<td align="right">494 (−1.7%)</td>
+<td align="right">484 (−1.8%)</td>
+<td align="right">652 (−2.9%)</td>
+<td align="right">621 (−3.1%)</td>
+<td align="right">605 (−3.2%)</td>
+</tr>
+<tr>
+<td>Orc</td>
+<td>H</td>
+<td align="right">513 (−1.8%)</td>
+<td align="right">492 (−2.1%)</td>
+<td align="right">481 (−2.4%)</td>
+<td align="right">652 (−2.8%)</td>
+<td align="right">620 (−3.3%)</td>
+<td align="right">601 (−3.7%)</td>
+</tr>
+<tr>
+<td>Dwarf</td>
+<td>A</td>
+<td align="right">507 (−3.0%)</td>
+<td align="right">488 (−2.8%)</td>
+<td align="right">478 (−2.9%)</td>
+<td align="right">639 (−4.9%)</td>
+<td align="right">608 (−5.1%)</td>
+<td align="right">592 (−5.2%)</td>
+</tr>
+<tr>
+<td>Gnome</td>
+<td>A</td>
+<td align="right">514 (−1.7%)</td>
+<td align="right">491 (−2.2%)</td>
+<td align="right">481 (−2.4%)</td>
+<td align="right">622 (−7.3%)</td>
+<td align="right">594 (−7.3%)</td>
+<td align="right">582 (−6.7%)</td>
+</tr>
+<tr>
+<td>Troll</td>
+<td>H</td>
+<td align="right">481 (−7.9%)</td>
+<td align="right">467 (−7.1%)</td>
+<td align="right">461 (−6.4%)</td>
+<td align="right">604 (−10.0%)</td>
+<td align="right">582 (−9.2%)</td>
+<td align="right">571 (−8.5%)</td>
+</tr>
+<tr>
+<td>Windshaper</td>
+<td>H</td>
+<td align="right">475 (−9.1%)</td>
+<td align="right">463 (−7.9%)</td>
+<td align="right">459 (−6.7%)</td>
+<td align="right">592 (−11.9%)</td>
+<td align="right">575 (−10.3%)</td>
+<td align="right">566 (−9.3%)</td>
+</tr>
+<tr>
+<td>High Order</td>
+<td>A</td>
+<td align="right">475 (−9.1%)</td>
+<td align="right">463 (−7.9%)</td>
+<td align="right">459 (−6.7%)</td>
+<td align="right">592 (−11.9%)</td>
+<td align="right">575 (−10.3%)</td>
+<td align="right">566 (−9.3%)</td>
+</tr>
+</tbody></table></div>
+<h3 id="hunter">Hunter</h3>
+<h4 id="beast-mastery-hunter">Beast Mastery Hunter</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Night Elf</td>
+<td>A</td>
+<td align="right"><strong>845</strong> (best)</td>
+<td align="right"><strong>816</strong> (best)</td>
+<td align="right"><strong>802</strong> (best)</td>
+<td align="right"><strong>951</strong> (best)</td>
+<td align="right"><strong>919</strong> (best)</td>
+<td align="right"><strong>904</strong> (best)</td>
+</tr>
+<tr>
+<td>Orc</td>
+<td>H</td>
+<td align="right">828 (−1.9%)</td>
+<td align="right">802 (−1.6%)</td>
+<td align="right">791 (−1.4%)</td>
+<td align="right">943 (−0.9%)</td>
+<td align="right">913 (−0.6%)</td>
+<td align="right">900 (−0.5%)</td>
+</tr>
+<tr>
+<td>Human</td>
+<td>A</td>
+<td align="right">820 (−2.9%)</td>
+<td align="right">797 (−2.3%)</td>
+<td align="right">786 (−2.0%)</td>
+<td align="right">938 (−1.3%)</td>
+<td align="right">912 (−0.8%)</td>
+<td align="right">901 (−0.4%)</td>
+</tr>
+<tr>
+<td>Troll</td>
+<td>H</td>
+<td align="right">828 (−2.0%)</td>
+<td align="right">803 (−1.6%)</td>
+<td align="right">792 (−1.3%)</td>
+<td align="right">938 (−1.4%)</td>
+<td align="right">909 (−1.0%)</td>
+<td align="right">899 (−0.5%)</td>
+</tr>
+<tr>
+<td>Windshaper</td>
+<td>H</td>
+<td align="right">824 (−2.5%)</td>
+<td align="right">800 (−1.9%)</td>
+<td align="right">789 (−1.6%)</td>
+<td align="right">929 (−2.3%)</td>
+<td align="right">903 (−1.7%)</td>
+<td align="right">895 (−1.0%)</td>
+</tr>
+<tr>
+<td>High Order</td>
+<td>A</td>
+<td align="right">824 (−2.5%)</td>
+<td align="right">800 (−1.9%)</td>
+<td align="right">789 (−1.6%)</td>
+<td align="right">929 (−2.3%)</td>
+<td align="right">903 (−1.7%)</td>
+<td align="right">895 (−1.0%)</td>
+</tr>
+<tr>
+<td>Tauren</td>
+<td>H</td>
+<td align="right">821 (−2.8%)</td>
+<td align="right">798 (−2.2%)</td>
+<td align="right">787 (−1.8%)</td>
+<td align="right">925 (−2.7%)</td>
+<td align="right">899 (−2.2%)</td>
+<td align="right">888 (−1.8%)</td>
+</tr>
+<tr>
+<td>Dwarf</td>
+<td>A</td>
+<td align="right">818 (−3.1%)</td>
+<td align="right">795 (−2.6%)</td>
+<td align="right">785 (−2.2%)</td>
+<td align="right">923 (−3.0%)</td>
+<td align="right">896 (−2.4%)</td>
+<td align="right">886 (−2.1%)</td>
+</tr>
+</tbody></table></div>
+<h4 id="marksmanship-hunter">Marksmanship Hunter</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Night Elf</td>
+<td>A</td>
+<td align="right"><strong>796</strong> (best)</td>
+<td align="right"><strong>772</strong> (best)</td>
+<td align="right"><strong>759</strong> (best)</td>
+<td align="right"><strong>910</strong> (best)</td>
+<td align="right"><strong>883</strong> (best)</td>
+<td align="right"><strong>869</strong> (best)</td>
+</tr>
+<tr>
+<td>Orc</td>
+<td>H</td>
+<td align="right">779 (−2.2%)</td>
+<td align="right">758 (−1.8%)</td>
+<td align="right">747 (−1.6%)</td>
+<td align="right">901 (−1.0%)</td>
+<td align="right">877 (−0.7%)</td>
+<td align="right">865 (−0.5%)</td>
+</tr>
+<tr>
+<td>Human</td>
+<td>A</td>
+<td align="right">769 (−3.3%)</td>
+<td align="right">752 (−2.7%)</td>
+<td align="right">742 (−2.2%)</td>
+<td align="right">895 (−1.6%)</td>
+<td align="right">875 (−0.9%)</td>
+<td align="right">865 (−0.5%)</td>
+</tr>
+<tr>
+<td>Troll</td>
+<td>H</td>
+<td align="right">778 (−2.3%)</td>
+<td align="right">759 (−1.8%)</td>
+<td align="right">748 (−1.5%)</td>
+<td align="right">895 (−1.7%)</td>
+<td align="right">874 (−1.0%)</td>
+<td align="right">861 (−1.0%)</td>
+</tr>
+<tr>
+<td>Windshaper</td>
+<td>H</td>
+<td align="right">773 (−2.8%)</td>
+<td align="right">756 (−2.1%)</td>
+<td align="right">746 (−1.8%)</td>
+<td align="right">887 (−2.5%)</td>
+<td align="right">868 (−1.8%)</td>
+<td align="right">857 (−1.5%)</td>
+</tr>
+<tr>
+<td>High Order</td>
+<td>A</td>
+<td align="right">773 (−2.8%)</td>
+<td align="right">756 (−2.1%)</td>
+<td align="right">746 (−1.8%)</td>
+<td align="right">887 (−2.5%)</td>
+<td align="right">868 (−1.8%)</td>
+<td align="right">857 (−1.5%)</td>
+</tr>
+<tr>
+<td>Tauren</td>
+<td>H</td>
+<td align="right">770 (−3.2%)</td>
+<td align="right">753 (−2.5%)</td>
+<td align="right">743 (−2.1%)</td>
+<td align="right">882 (−3.1%)</td>
+<td align="right">861 (−2.5%)</td>
+<td align="right">852 (−2.0%)</td>
+</tr>
+<tr>
+<td>Dwarf</td>
+<td>A</td>
+<td align="right">767 (−3.6%)</td>
+<td align="right">750 (−2.9%)</td>
+<td align="right">740 (−2.5%)</td>
+<td align="right">879 (−3.4%)</td>
+<td align="right">859 (−2.8%)</td>
+<td align="right">849 (−2.4%)</td>
+</tr>
+</tbody></table></div>
+<h4 id="survival-hunter">Survival Hunter</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Night Elf</td>
+<td>A</td>
+<td align="right"><strong>725</strong> (best)</td>
+<td align="right"><strong>704</strong> (best)</td>
+<td align="right"><strong>695</strong> (best)</td>
+<td align="right"><strong>852</strong> (best)</td>
+<td align="right"><strong>829</strong> (best)</td>
+<td align="right"><strong>818</strong> (best)</td>
+</tr>
+<tr>
+<td>Orc</td>
+<td>H</td>
+<td align="right">709 (−2.2%)</td>
+<td align="right">692 (−1.8%)</td>
+<td align="right">684 (−1.5%)</td>
+<td align="right">846 (−0.7%)</td>
+<td align="right">825 (−0.5%)</td>
+<td align="right">815 (−0.3%) ≈</td>
+</tr>
+<tr>
+<td>Human</td>
+<td>A</td>
+<td align="right">711 (−1.9%)</td>
+<td align="right">697 (−1.0%)</td>
+<td align="right">691 (−0.5%)</td>
+<td align="right">841 (−1.3%)</td>
+<td align="right">824 (−0.6%)</td>
+<td align="right">817 (−0.1%) ≈</td>
+</tr>
+<tr>
+<td>Troll</td>
+<td>H</td>
+<td align="right">708 (−2.3%)</td>
+<td align="right">692 (−1.7%)</td>
+<td align="right">684 (−1.5%)</td>
+<td align="right">841 (−1.3%)</td>
+<td align="right">821 (−0.9%)</td>
+<td align="right">811 (−0.8%)</td>
+</tr>
+<tr>
+<td>Windshaper</td>
+<td>H</td>
+<td align="right">701 (−3.4%)</td>
+<td align="right">687 (−2.4%)</td>
+<td align="right">681 (−2.0%)</td>
+<td align="right">832 (−2.3%)</td>
+<td align="right">817 (−1.5%)</td>
+<td align="right">809 (−1.0%)</td>
+</tr>
+<tr>
+<td>High Order</td>
+<td>A</td>
+<td align="right">701 (−3.4%)</td>
+<td align="right">687 (−2.4%)</td>
+<td align="right">681 (−2.0%)</td>
+<td align="right">832 (−2.3%)</td>
+<td align="right">817 (−1.5%)</td>
+<td align="right">809 (−1.0%)</td>
+</tr>
+<tr>
+<td>Tauren</td>
+<td>H</td>
+<td align="right">699 (−3.6%)</td>
+<td align="right">685 (−2.8%)</td>
+<td align="right">679 (−2.2%)</td>
+<td align="right">824 (−3.2%)</td>
+<td align="right">808 (−2.5%)</td>
+<td align="right">801 (−2.1%)</td>
+</tr>
+<tr>
+<td>Dwarf</td>
+<td>A</td>
+<td align="right">695 (−4.1%)</td>
+<td align="right">681 (−3.3%)</td>
+<td align="right">676 (−2.7%)</td>
+<td align="right">820 (−3.7%)</td>
+<td align="right">804 (−3.0%)</td>
+<td align="right">797 (−2.6%)</td>
+</tr>
+</tbody></table></div>
+<h3 id="mage">Mage</h3>
+<h4 id="arcane-mage">Arcane Mage</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Undead</td>
+<td>H</td>
+<td align="right"><strong>615</strong> (best)</td>
+<td align="right"><strong>605</strong> (best)</td>
+<td align="right"><strong>600</strong> (best)</td>
+<td align="right"><strong>756</strong> (best)</td>
+<td align="right"><strong>742</strong> (best)</td>
+<td align="right"><strong>735</strong> (best)</td>
+</tr>
+<tr>
+<td>Orc</td>
+<td>H</td>
+<td align="right">609 (−1.0%)</td>
+<td align="right">597 (−1.4%)</td>
+<td align="right">589 (−1.8%)</td>
+<td align="right">754 (−0.3%) ≈</td>
+<td align="right">737 (−0.7%)</td>
+<td align="right">726 (−1.1%)</td>
+</tr>
+<tr>
+<td>Gnome</td>
+<td>A</td>
+<td align="right">611 (−0.7%)</td>
+<td align="right">598 (−1.1%)</td>
+<td align="right">591 (−1.5%)</td>
+<td align="right">753 (−0.3%) ≈</td>
+<td align="right">737 (−0.7%)</td>
+<td align="right">727 (−1.1%)</td>
+</tr>
+<tr>
+<td>Troll</td>
+<td>H</td>
+<td align="right">604 (−1.8%)</td>
+<td align="right">593 (−2.0%)</td>
+<td align="right">586 (−2.3%)</td>
+<td align="right">745 (−1.4%)</td>
+<td align="right">730 (−1.6%)</td>
+<td align="right">721 (−1.9%)</td>
+</tr>
+<tr>
+<td>High Order</td>
+<td>A</td>
+<td align="right">602 (−2.1%)</td>
+<td align="right">592 (−2.2%)</td>
+<td align="right">586 (−2.2%)</td>
+<td align="right">742 (−1.8%)</td>
+<td align="right">729 (−1.9%)</td>
+<td align="right">721 (−1.8%)</td>
+</tr>
+<tr>
+<td>Human</td>
+<td>A</td>
+<td align="right">610 (−0.9%)</td>
+<td align="right">600 (−0.9%)</td>
+<td align="right">593 (−1.1%)</td>
+<td align="right">740 (−2.1%)</td>
+<td align="right">727 (−2.1%)</td>
+<td align="right">718 (−2.2%)</td>
+</tr>
+</tbody></table></div>
+<h4 id="fire-mage">Fire Mage</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Orc</td>
+<td>H</td>
+<td align="right"><strong>754</strong> (best)</td>
+<td align="right">737 (−0.2%) ≈</td>
+<td align="right">743 (−0.5%)</td>
+<td align="right"><strong>920</strong> (best)</td>
+<td align="right"><strong>904</strong> (best)</td>
+<td align="right">914 (−0.1%) ≈</td>
+</tr>
+<tr>
+<td>Undead</td>
+<td>H</td>
+<td align="right">754 (−0.0%) ≈</td>
+<td align="right"><strong>739</strong> (best)</td>
+<td align="right"><strong>747</strong> (best)</td>
+<td align="right">916 (−0.4%) ≈</td>
+<td align="right">901 (−0.2%) ≈</td>
+<td align="right"><strong>915</strong> (best)</td>
+</tr>
+<tr>
+<td>High Order</td>
+<td>A</td>
+<td align="right">744 (−1.3%)</td>
+<td align="right">736 (−0.5%) ≈</td>
+<td align="right">741 (−0.8%)</td>
+<td align="right">906 (−1.6%)</td>
+<td align="right">899 (−0.5%) ≈</td>
+<td align="right">907 (−0.8%)</td>
+</tr>
+<tr>
+<td>Human</td>
+<td>A</td>
+<td align="right">744 (−1.3%)</td>
+<td align="right">730 (−1.2%)</td>
+<td align="right">738 (−1.3%)</td>
+<td align="right">904 (−1.7%)</td>
+<td align="right">891 (−1.4%)</td>
+<td align="right">901 (−1.5%)</td>
+</tr>
+<tr>
+<td>Gnome</td>
+<td>A</td>
+<td align="right">750 (−0.6%)</td>
+<td align="right">729 (−1.4%)</td>
+<td align="right">738 (−1.3%)</td>
+<td align="right">907 (−1.5%)</td>
+<td align="right">890 (−1.5%)</td>
+<td align="right">898 (−1.8%)</td>
+</tr>
+<tr>
+<td>Troll</td>
+<td>H</td>
+<td align="right">743 (−1.5%)</td>
+<td align="right">729 (−1.3%)</td>
+<td align="right">737 (−1.3%)</td>
+<td align="right">900 (−2.2%)</td>
+<td align="right">888 (−1.7%)</td>
+<td align="right">897 (−1.9%)</td>
+</tr>
+</tbody></table></div>
+<h4 id="frost-mage">Frost Mage</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Troll</td>
+<td>H</td>
+<td align="right"><strong>554</strong> (best)</td>
+<td align="right">559 (−0.1%) ≈</td>
+<td align="right">563 (−0.2%) ≈</td>
+<td align="right"><strong>681</strong> (best)</td>
+<td align="right"><strong>686</strong> (best)</td>
+<td align="right">690 (−0.1%) ≈</td>
+</tr>
+<tr>
+<td>Undead</td>
+<td>H</td>
+<td align="right">550 (−0.8%)</td>
+<td align="right"><strong>559</strong> (best)</td>
+<td align="right">564 (−0.0%) ≈</td>
+<td align="right">676 (−0.7%)</td>
+<td align="right">686 (−0.0%) ≈</td>
+<td align="right"><strong>691</strong> (best)</td>
+</tr>
+<tr>
+<td>Gnome</td>
+<td>A</td>
+<td align="right">550 (−0.7%)</td>
+<td align="right">556 (−0.5%)</td>
+<td align="right">561 (−0.5%)</td>
+<td align="right">677 (−0.6%)</td>
+<td align="right">684 (−0.4%) ≈</td>
+<td align="right">688 (−0.3%) ≈</td>
+</tr>
+<tr>
+<td>Orc</td>
+<td>H</td>
+<td align="right">550 (−0.9%)</td>
+<td align="right">556 (−0.7%)</td>
+<td align="right">560 (−0.8%)</td>
+<td align="right">677 (−0.6%)</td>
+<td align="right">683 (−0.4%)</td>
+<td align="right">687 (−0.5%)</td>
+</tr>
+<tr>
+<td>High Order</td>
+<td>A</td>
+<td align="right">547 (−1.4%)</td>
+<td align="right">555 (−0.8%)</td>
+<td align="right">561 (−0.6%)</td>
+<td align="right">673 (−1.3%)</td>
+<td align="right">681 (−0.7%)</td>
+<td align="right">688 (−0.4%)</td>
+</tr>
+<tr>
+<td>Human</td>
+<td>A</td>
+<td align="right">551 (−0.6%)</td>
+<td align="right">559 (−0.1%) ≈</td>
+<td align="right"><strong>564</strong> (best)</td>
+<td align="right">668 (−1.9%)</td>
+<td align="right">676 (−1.4%)</td>
+<td align="right">682 (−1.3%)</td>
+</tr>
+</tbody></table></div>
+<h3 id="warlock">Warlock</h3>
+<h4 id="affliction-warlock">Affliction Warlock</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Gnome</td>
+<td>A</td>
+<td align="right">645 (−0.2%) ≈</td>
+<td align="right"><strong>651</strong> (best)</td>
+<td align="right"><strong>658</strong> (best)</td>
+<td align="right">819 (−0.2%) ≈</td>
+<td align="right"><strong>828</strong> (best)</td>
+<td align="right"><strong>841</strong> (best)</td>
+</tr>
+<tr>
+<td>Orc</td>
+<td>H</td>
+<td align="right">645 (−0.2%) ≈</td>
+<td align="right">641 (−1.7%)</td>
+<td align="right">646 (−1.8%)</td>
+<td align="right"><strong>821</strong> (best)</td>
+<td align="right">821 (−0.8%)</td>
+<td align="right">828 (−1.5%)</td>
+</tr>
+<tr>
+<td>Undead</td>
+<td>H</td>
+<td align="right">644 (−0.4%)</td>
+<td align="right">642 (−1.4%)</td>
+<td align="right">648 (−1.6%)</td>
+<td align="right">816 (−0.6%)</td>
+<td align="right">821 (−0.9%)</td>
+<td align="right">826 (−1.7%)</td>
+</tr>
+<tr>
+<td>Human</td>
+<td>A</td>
+<td align="right"><strong>647</strong> (best)</td>
+<td align="right">645 (−1.0%)</td>
+<td align="right">651 (−1.1%)</td>
+<td align="right">805 (−1.9%)</td>
+<td align="right">811 (−2.1%)</td>
+<td align="right">817 (−2.9%)</td>
+</tr>
+<tr>
+<td>Troll</td>
+<td>H</td>
+<td align="right">644 (−0.4%)</td>
+<td align="right">634 (−2.7%)</td>
+<td align="right">641 (−2.6%)</td>
+<td align="right">819 (−0.2%) ≈</td>
+<td align="right">809 (−2.3%)</td>
+<td align="right">821 (−2.3%)</td>
+</tr>
+</tbody></table></div>
+<h4 id="dsruin-warlock">DS/Ruin Warlock</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Orc</td>
+<td>H</td>
+<td align="right">584 (−0.3%) ≈</td>
+<td align="right">591 (−0.7%)</td>
+<td align="right">604 (−1.4%)</td>
+<td align="right">770 (−0.4%) ≈</td>
+<td align="right"><strong>779</strong> (best)</td>
+<td align="right">800 (−1.4%)</td>
+</tr>
+<tr>
+<td>Undead</td>
+<td>H</td>
+<td align="right">585 (−0.2%) ≈</td>
+<td align="right">595 (−0.0%) ≈</td>
+<td align="right">607 (−0.9%)</td>
+<td align="right">764 (−1.1%)</td>
+<td align="right">779 (−0.0%) ≈</td>
+<td align="right">798 (−1.6%)</td>
+</tr>
+<tr>
+<td>Gnome</td>
+<td>A</td>
+<td align="right">585 (−0.2%) ≈</td>
+<td align="right">592 (−0.5%)</td>
+<td align="right"><strong>613</strong> (best)</td>
+<td align="right">768 (−0.6%)</td>
+<td align="right">778 (−0.1%) ≈</td>
+<td align="right"><strong>811</strong> (best)</td>
+</tr>
+<tr>
+<td>Troll</td>
+<td>H</td>
+<td align="right"><strong>586</strong> (best)</td>
+<td align="right">588 (−1.2%)</td>
+<td align="right">595 (−2.9%)</td>
+<td align="right"><strong>773</strong> (best)</td>
+<td align="right">776 (−0.4%)</td>
+<td align="right">788 (−2.8%)</td>
+</tr>
+<tr>
+<td>Human</td>
+<td>A</td>
+<td align="right">585 (−0.1%) ≈</td>
+<td align="right"><strong>595</strong> (best)</td>
+<td align="right">608 (−0.8%)</td>
+<td align="right">753 (−2.6%)</td>
+<td align="right">766 (−1.6%)</td>
+<td align="right">786 (−3.1%)</td>
+</tr>
+</tbody></table></div>
+<h4 id="demonic-pact-warlock">Demonic Pact Warlock</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Undead</td>
+<td>H</td>
+<td align="right"><strong>624</strong> (best)</td>
+<td align="right"><strong>640</strong> (best)</td>
+<td align="right">671 (−0.7%)</td>
+<td align="right">780 (−0.3%) ≈</td>
+<td align="right"><strong>802</strong> (best)</td>
+<td align="right">842 (−0.5%)</td>
+</tr>
+<tr>
+<td>Orc</td>
+<td>H</td>
+<td align="right">623 (−0.2%) ≈</td>
+<td align="right">635 (−0.7%)</td>
+<td align="right">671 (−0.7%)</td>
+<td align="right"><strong>783</strong> (best)</td>
+<td align="right">800 (−0.3%) ≈</td>
+<td align="right">845 (−0.2%) ≈</td>
+</tr>
+<tr>
+<td>Gnome</td>
+<td>A</td>
+<td align="right">621 (−0.4%)</td>
+<td align="right">635 (−0.8%)</td>
+<td align="right"><strong>676</strong> (best)</td>
+<td align="right">780 (−0.3%)</td>
+<td align="right">798 (−0.5%)</td>
+<td align="right"><strong>847</strong> (best)</td>
+</tr>
+<tr>
+<td>Troll</td>
+<td>H</td>
+<td align="right">611 (−1.9%)</td>
+<td align="right">627 (−2.0%)</td>
+<td align="right">660 (−2.3%)</td>
+<td align="right">769 (−1.8%)</td>
+<td align="right">789 (−1.6%)</td>
+<td align="right">830 (−2.0%)</td>
+</tr>
+<tr>
+<td>Human</td>
+<td>A</td>
+<td align="right">622 (−0.3%) ≈</td>
+<td align="right">638 (−0.2%) ≈</td>
+<td align="right">675 (−0.1%) ≈</td>
+<td align="right">767 (−2.1%)</td>
+<td align="right">788 (−1.7%)</td>
+<td align="right">832 (−1.7%)</td>
+</tr>
+</tbody></table></div>
+<h4 id="destruction-warlock">Destruction Warlock</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Undead</td>
+<td>H</td>
+<td align="right"><strong>669</strong> (best)</td>
+<td align="right"><strong>662</strong> (best)</td>
+<td align="right"><strong>661</strong> (best)</td>
+<td align="right"><strong>810</strong> (best)</td>
+<td align="right"><strong>807</strong> (best)</td>
+<td align="right">799 (−0.3%)</td>
+</tr>
+<tr>
+<td>Gnome</td>
+<td>A</td>
+<td align="right">665 (−0.6%)</td>
+<td align="right">661 (−0.1%) ≈</td>
+<td align="right">660 (−0.2%) ≈</td>
+<td align="right">808 (−0.3%)</td>
+<td align="right">802 (−0.6%)</td>
+<td align="right"><strong>802</strong> (best)</td>
+</tr>
+<tr>
+<td>Orc</td>
+<td>H</td>
+<td align="right">665 (−0.6%)</td>
+<td align="right">655 (−1.0%)</td>
+<td align="right">657 (−0.6%)</td>
+<td align="right">802 (−0.9%)</td>
+<td align="right">796 (−1.3%)</td>
+<td align="right">791 (−1.4%)</td>
+</tr>
+<tr>
+<td>Human</td>
+<td>A</td>
+<td align="right">656 (−1.9%)</td>
+<td align="right">649 (−1.9%)</td>
+<td align="right">650 (−1.7%)</td>
+<td align="right">797 (−1.6%)</td>
+<td align="right">793 (−1.7%)</td>
+<td align="right">785 (−2.1%)</td>
+</tr>
+<tr>
+<td>Troll</td>
+<td>H</td>
+<td align="right">636 (−4.9%)</td>
+<td align="right">636 (−3.8%)</td>
+<td align="right">647 (−2.1%)</td>
+<td align="right">772 (−4.7%)</td>
+<td align="right">772 (−4.3%)</td>
+<td align="right">787 (−1.9%)</td>
+</tr>
+</tbody></table></div>
+<h3 id="priest">Priest</h3>
+<h4 id="shadow-priest">Shadow Priest</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Night Elf</td>
+<td>A</td>
+<td align="right"><strong>653</strong> (best)</td>
+<td align="right"><strong>631</strong> (best)</td>
+<td align="right">645 (−0.2%)</td>
+<td align="right"><strong>780</strong> (best)</td>
+<td align="right"><strong>754</strong> (best)</td>
+<td align="right">770 (−0.1%) ≈</td>
+</tr>
+<tr>
+<td>Gnome</td>
+<td>A</td>
+<td align="right">651 (−0.4%)</td>
+<td align="right">629 (−0.3%)</td>
+<td align="right">643 (−0.4%)</td>
+<td align="right">780 (−0.1%) ≈</td>
+<td align="right">753 (−0.1%) ≈</td>
+<td align="right">770 (−0.2%)</td>
+</tr>
+<tr>
+<td>Undead</td>
+<td>H</td>
+<td align="right">648 (−0.8%)</td>
+<td align="right">629 (−0.3%)</td>
+<td align="right"><strong>646</strong> (best)</td>
+<td align="right">775 (−0.7%)</td>
+<td align="right">752 (−0.3%)</td>
+<td align="right"><strong>771</strong> (best)</td>
+</tr>
+<tr>
+<td>Human</td>
+<td>A</td>
+<td align="right">637 (−2.5%)</td>
+<td align="right">619 (−2.0%)</td>
+<td align="right">635 (−1.7%)</td>
+<td align="right">763 (−2.2%)</td>
+<td align="right">741 (−1.7%)</td>
+<td align="right">760 (−1.5%)</td>
+</tr>
+<tr>
+<td>Dwarf</td>
+<td>A</td>
+<td align="right">642 (−1.7%)</td>
+<td align="right">624 (−1.1%)</td>
+<td align="right">640 (−0.9%)</td>
+<td align="right">763 (−2.2%)</td>
+<td align="right">741 (−1.7%)</td>
+<td align="right">760 (−1.5%)</td>
+</tr>
+<tr>
+<td>Troll</td>
+<td>H</td>
+<td align="right">635 (−2.8%)</td>
+<td align="right">617 (−2.2%)</td>
+<td align="right">634 (−1.9%)</td>
+<td align="right">761 (−2.5%)</td>
+<td align="right">739 (−2.0%)</td>
+<td align="right">758 (−1.7%)</td>
+</tr>
+</tbody></table></div>
+<h4 id="smite-priest">Smite Priest</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Night Elf</td>
+<td>A</td>
+<td align="right"><strong>536</strong> (best)</td>
+<td align="right"><strong>523</strong> (best)</td>
+<td align="right"><strong>515</strong> (best)</td>
+<td align="right"><strong>672</strong> (best)</td>
+<td align="right"><strong>655</strong> (best)</td>
+<td align="right"><strong>645</strong> (best)</td>
+</tr>
+<tr>
+<td>Gnome</td>
+<td>A</td>
+<td align="right">534 (−0.2%)</td>
+<td align="right">522 (−0.2%)</td>
+<td align="right">514 (−0.1%) ≈</td>
+<td align="right">671 (−0.1%) ≈</td>
+<td align="right">655 (−0.1%) ≈</td>
+<td align="right">645 (−0.1%) ≈</td>
+</tr>
+<tr>
+<td>Human</td>
+<td>A</td>
+<td align="right">527 (−1.7%)</td>
+<td align="right">516 (−1.3%)</td>
+<td align="right">509 (−1.0%)</td>
+<td align="right">661 (−1.6%)</td>
+<td align="right">647 (−1.2%)</td>
+<td align="right">639 (−1.0%)</td>
+</tr>
+<tr>
+<td>Dwarf</td>
+<td>A</td>
+<td align="right">529 (−1.2%)</td>
+<td align="right">518 (−0.9%)</td>
+<td align="right">511 (−0.6%)</td>
+<td align="right">661 (−1.6%)</td>
+<td align="right">647 (−1.2%)</td>
+<td align="right">638 (−1.0%)</td>
+</tr>
+<tr>
+<td>Troll</td>
+<td>H</td>
+<td align="right">527 (−1.6%)</td>
+<td align="right">516 (−1.2%)</td>
+<td align="right">510 (−1.0%)</td>
+<td align="right">661 (−1.6%)</td>
+<td align="right">647 (−1.3%)</td>
+<td align="right">638 (−1.0%)</td>
+</tr>
+<tr>
+<td>Undead</td>
+<td>H</td>
+<td align="right">533 (−0.4%)</td>
+<td align="right">509 (−2.6%)</td>
+<td align="right">505 (−1.8%)</td>
+<td align="right">669 (−0.5%)</td>
+<td align="right">637 (−2.8%)</td>
+<td align="right">632 (−2.0%)</td>
+</tr>
+</tbody></table></div>
+<h3 id="shaman">Shaman</h3>
+<h4 id="enhancement-shaman">Enhancement Shaman</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Orc</td>
+<td>H</td>
+<td align="right"><strong>654</strong> (best)</td>
+<td align="right"><strong>636</strong> (best)</td>
+<td align="right"><strong>625</strong> (best)</td>
+<td align="right"><strong>777</strong> (best)</td>
+<td align="right"><strong>758</strong> (best)</td>
+<td align="right"><strong>745</strong> (best)</td>
+</tr>
+<tr>
+<td>Dwarf</td>
+<td>A</td>
+<td align="right">636 (−2.8%)</td>
+<td align="right">620 (−2.4%)</td>
+<td align="right">612 (−2.1%)</td>
+<td align="right">772 (−0.7%)</td>
+<td align="right">754 (−0.5%)</td>
+<td align="right">743 (−0.3%) ≈</td>
+</tr>
+<tr>
+<td>Tauren</td>
+<td>H</td>
+<td align="right">639 (−2.3%)</td>
+<td align="right">623 (−1.9%)</td>
+<td align="right">615 (−1.6%)</td>
+<td align="right">766 (−1.4%)</td>
+<td align="right">749 (−1.2%)</td>
+<td align="right">740 (−0.7%)</td>
+</tr>
+<tr>
+<td>Windshaper</td>
+<td>H</td>
+<td align="right">639 (−2.3%)</td>
+<td align="right">624 (−1.9%)</td>
+<td align="right">615 (−1.6%)</td>
+<td align="right">769 (−1.0%)</td>
+<td align="right">748 (−1.2%)</td>
+<td align="right">738 (−0.9%)</td>
+</tr>
+<tr>
+<td>Troll</td>
+<td>H</td>
+<td align="right">645 (−1.4%)</td>
+<td align="right">626 (−1.4%)</td>
+<td align="right">617 (−1.2%)</td>
+<td align="right">763 (−1.8%)</td>
+<td align="right">744 (−1.9%)</td>
+<td align="right">734 (−1.6%)</td>
+</tr>
+</tbody></table></div>
+<h4 id="elemental-shaman">Elemental Shaman</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Orc</td>
+<td>H</td>
+<td align="right">430 (−0.1%) ≈</td>
+<td align="right"><strong>428</strong> (best)</td>
+<td align="right"><strong>429</strong> (best)</td>
+<td align="right"><strong>543</strong> (best)</td>
+<td align="right"><strong>535</strong> (best)</td>
+<td align="right"><strong>537</strong> (best)</td>
+</tr>
+<tr>
+<td>Troll</td>
+<td>H</td>
+<td align="right"><strong>431</strong> (best)</td>
+<td align="right">424 (−0.8%)</td>
+<td align="right">427 (−0.6%)</td>
+<td align="right">539 (−0.8%)</td>
+<td align="right">531 (−0.7%)</td>
+<td align="right">533 (−0.7%)</td>
+</tr>
+<tr>
+<td>Tauren</td>
+<td>H</td>
+<td align="right">426 (−1.1%)</td>
+<td align="right">426 (−0.5%)</td>
+<td align="right">428 (−0.2%)</td>
+<td align="right">536 (−1.2%)</td>
+<td align="right">531 (−0.7%)</td>
+<td align="right">535 (−0.4%)</td>
+</tr>
+<tr>
+<td>Dwarf</td>
+<td>A</td>
+<td align="right">426 (−1.1%)</td>
+<td align="right">426 (−0.5%)</td>
+<td align="right">428 (−0.3%)</td>
+<td align="right">532 (−1.9%)</td>
+<td align="right">527 (−1.5%)</td>
+<td align="right">530 (−1.1%)</td>
+</tr>
+<tr>
+<td>Windshaper</td>
+<td>H</td>
+<td align="right">422 (−1.9%)</td>
+<td align="right">422 (−1.5%)</td>
+<td align="right">427 (−0.6%)</td>
+<td align="right">532 (−2.1%)</td>
+<td align="right">526 (−1.7%)</td>
+<td align="right">530 (−1.2%)</td>
+</tr>
+</tbody></table></div>
+<h4 id="stormcaller-shaman">Stormcaller Shaman</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Orc</td>
+<td>H</td>
+<td align="right"><strong>450</strong> (best)</td>
+<td align="right"><strong>445</strong> (best)</td>
+<td align="right"><strong>447</strong> (best)</td>
+<td align="right"><strong>562</strong> (best)</td>
+<td align="right"><strong>556</strong> (best)</td>
+<td align="right"><strong>556</strong> (best)</td>
+</tr>
+<tr>
+<td>Tauren</td>
+<td>H</td>
+<td align="right">446 (−1.1%)</td>
+<td align="right">442 (−0.6%)</td>
+<td align="right">445 (−0.3%)</td>
+<td align="right">555 (−1.2%)</td>
+<td align="right">551 (−0.8%)</td>
+<td align="right">554 (−0.5%)</td>
+</tr>
+<tr>
+<td>Troll</td>
+<td>H</td>
+<td align="right">447 (−0.8%)</td>
+<td align="right">440 (−1.1%)</td>
+<td align="right">443 (−0.8%)</td>
+<td align="right">558 (−0.8%)</td>
+<td align="right">549 (−1.1%)</td>
+<td align="right">551 (−0.8%)</td>
+</tr>
+<tr>
+<td>Dwarf</td>
+<td>A</td>
+<td align="right">446 (−1.0%)</td>
+<td align="right">442 (−0.6%)</td>
+<td align="right">446 (−0.3%)</td>
+<td align="right">551 (−1.9%)</td>
+<td align="right">548 (−1.4%)</td>
+<td align="right">550 (−1.1%)</td>
+</tr>
+<tr>
+<td>Windshaper</td>
+<td>H</td>
+<td align="right">442 (−1.9%)</td>
+<td align="right">438 (−1.5%)</td>
+<td align="right">443 (−0.7%)</td>
+<td align="right">550 (−2.2%)</td>
+<td align="right">546 (−1.7%)</td>
+<td align="right">553 (−0.6%)</td>
+</tr>
+</tbody></table></div>
+<h3 id="druid">Druid</h3>
+<h4 id="balance-druid">Balance Druid</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Night Elf</td>
+<td>A</td>
+<td align="right"><strong>457</strong> (best)</td>
+<td align="right"><strong>455</strong> (best)</td>
+<td align="right"><strong>456</strong> (best)</td>
+<td align="right"><strong>585</strong> (best)</td>
+<td align="right"><strong>594</strong> (best)</td>
+<td align="right"><strong>593</strong> (best)</td>
+</tr>
+<tr>
+<td>Tauren</td>
+<td>H</td>
+<td align="right">448 (−2.0%)</td>
+<td align="right">448 (−1.5%)</td>
+<td align="right">451 (−1.1%)</td>
+<td align="right">575 (−1.7%)</td>
+<td align="right">588 (−1.1%)</td>
+<td align="right">588 (−0.7%)</td>
+</tr>
+<tr>
+<td>Windshaper</td>
+<td>H</td>
+<td align="right">447 (−2.4%)</td>
+<td align="right">448 (−1.4%)</td>
+<td align="right">451 (−1.3%)</td>
+<td align="right">573 (−2.1%)</td>
+<td align="right">587 (−1.3%)</td>
+<td align="right">587 (−1.0%)</td>
+</tr>
+<tr>
+<td>High Order</td>
+<td>A</td>
+<td align="right">447 (−2.4%)</td>
+<td align="right">448 (−1.4%)</td>
+<td align="right">451 (−1.3%)</td>
+<td align="right">573 (−2.1%)</td>
+<td align="right">587 (−1.3%)</td>
+<td align="right">587 (−1.0%)</td>
+</tr>
+</tbody></table></div>
+<h4 id="feral-druid">Feral Druid</h4>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>Race</th>
+<th>Side</th>
+<th align="right">45 s, same gear</th>
+<th align="right">60 s, same gear</th>
+<th align="right">75 s, same gear</th>
+<th align="right">45 s, per-race gear</th>
+<th align="right">60 s, per-race gear</th>
+<th align="right">75 s, per-race gear</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Night Elf</td>
+<td>A</td>
+<td align="right"><strong>614</strong> (best)</td>
+<td align="right"><strong>593</strong> (best)</td>
+<td align="right"><strong>571</strong> (best)</td>
+<td align="right"><strong>681</strong> (best)</td>
+<td align="right"><strong>661</strong> (best)</td>
+<td align="right"><strong>638</strong> (best)</td>
+</tr>
+<tr>
+<td>Tauren</td>
+<td>H</td>
+<td align="right">608 (−1.0%)</td>
+<td align="right">589 (−0.7%)</td>
+<td align="right">569 (−0.5%)</td>
+<td align="right">672 (−1.3%)</td>
+<td align="right">655 (−0.9%)</td>
+<td align="right">634 (−0.7%)</td>
+</tr>
+<tr>
+<td>Windshaper</td>
+<td>H</td>
+<td align="right">601 (−2.1%)</td>
+<td align="right">587 (−1.1%)</td>
+<td align="right">565 (−1.1%)</td>
+<td align="right">665 (−2.3%)</td>
+<td align="right">652 (−1.3%)</td>
+<td align="right">630 (−1.3%)</td>
+</tr>
+<tr>
+<td>High Order</td>
+<td>A</td>
+<td align="right">601 (−2.1%)</td>
+<td align="right">587 (−1.1%)</td>
+<td align="right">565 (−1.1%)</td>
+<td align="right">665 (−2.3%)</td>
+<td align="right">652 (−1.3%)</td>
+<td align="right">630 (−1.3%)</td>
+</tr>
+</tbody></table></div>
+<h2 id="reproducing-this">Reproducing this</h2>
+<p>From the repository root, with Go (1.23 or newer) and the repository checked out, for each duration D in 45, 60 and 75:</p>
+<pre><code class="language-sh">go build -buildvcs=false -tags with_db -o forever-bench ./tools/forever_bench
+./forever-bench -duration D -iterations 5000 -seed 20291951 -output sameD
+./forever-bench -duration D -iterations 5000 -seed 20291951 -baseline-results artifacts/forever_dps_5min.json -output optD
+</code></pre>
+<p>The second command replays the fork&#39;s saved per-race loadouts (found for a 5-minute fight). Replaying them at 5 minutes reproduced the committed results exactly (0.000% difference across all 147 rows).</p>
+</article></body></html>

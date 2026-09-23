@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>In-game checks - Forever DPS benchmark</title><style>
+body{background:#15171d;color:#e8e9ed;font:16px/1.6 system-ui,sans-serif;margin:0}
+a{color:#a9d8ff}
+.top{display:flex;gap:1.5rem;flex-wrap:wrap;padding:.8rem 2rem;background:#242834;border-bottom:1px solid #343945;font-size:.92rem}
+article{max-width:1150px;margin:0 auto;padding:1.5rem 2rem 4rem}
+h1,h2,h3,h4{line-height:1.25;margin:2rem 0 .8rem}h1{margin-top:.5rem}
+h2{border-bottom:1px solid #343945;padding-bottom:.3rem}
+.tw{overflow-x:auto;margin:1rem 0}
+table{border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{padding:.4rem .75rem;border-bottom:1px solid #343945;text-align:left;vertical-align:top}
+thead{background:#242834}tbody tr:hover{background:#1e212a}
+code{background:#242834;padding:.1rem .35rem;border-radius:4px;font-size:.9em}
+pre{background:#242834;padding:1rem;border-radius:6px;overflow-x:auto}pre code{background:none;padding:0}
+blockquote{margin:1rem 0;padding:.2rem 1rem;border-left:4px solid #4a5163;color:#b9c0cf}
+li{margin:.2rem 0}img{max-width:100%}
+</style></head>
+<body><nav class="top"><a href="./">&larr; Benchmark matrix</a><a href="in_game_checks.md">Raw markdown</a></nav>
+<article>
+<h1 id="in-game-checks">In-game checks</h1>
+<p>Client data establishes many values but not every server-side interaction.
+These are the checks most likely to change simulated damage or the preferred
+rotation. The open checks below still need measurements.</p>
+<h2 id="available-early">Available early</h2>
+<h3 id="t22--healing-only-gear-and-enchant-damage">T22 — Healing-only gear and enchant damage</h3>
+<p><strong>Priority:</strong> high · <strong>Access:</strong> level 20 if a suitable item or enchant is available · <strong>Status:</strong> open</p>
+<p>Record spell damage and bonus healing before and after equipping a healing-only
+item. Repeat with a healing enchant, keeping the underlying item unchanged.
+Record item/enchant IDs and check all spell schools, for example with
+<code>GetSpellBonusDamage</code>. Exclude items whose client data already has explicit
+spell damage.</p>
+<p><strong>Resolves:</strong> the inherited simulator rule adds one spell damage per three
+healing power when a record has no explicit damage component. It also applies
+to enchants: +24 healing bracers currently provide eight modeled spell damage.
+The presence of that rule is not confirmation that Forever applies it to
+every healing-only item or enchant.</p>
+<h3 id="t20--pvp-vendor-stock-and-level-65-class-armor">T20 — PvP vendor stock and level-65 class armor</h3>
+<p><strong>Priority:</strong> high · <strong>Access:</strong> vendor access on either faction; Alliance stock especially needed · <strong>Status:</strong> open</p>
+<p>Inspect the weapon, armor and accessory quartermasters and export their item
+IDs, costs and tooltips. Buying level-60 equipment is not necessary.
+Compare the Premier items with the Horde exports, especially weapon damage.
+Check the level-65 class sets as well: for example Premier Champion&#39;s Magus
+Handguards (272505), Premier Champion&#39;s Felweave Gloves (272556), and Premier
+Lieutenant Commander&#39;s Silk Gloves (272749). Their current database entries
+have no acquisition source, unlike the lower-level Premier items already
+captured from vendors. Record the NPC and item ID rather than matching names.</p>
+<p><strong>Resolves:</strong> the item catalog has unrestricted client race masks and tooltips
+that name both Grand Marshal and High Warlord, but the captured merchant stock
+is from Horde vendors. Equip legality does not itself establish Alliance
+acquisition or prove that faction counterparts have identical server stats.</p>
+<h3 id="t15--energy-recovery-and-haste">T15 — Energy recovery and haste</h3>
+<p><strong>Priority:</strong> high · <strong>Access:</strong> Rogue or level-20 Cat · <strong>Status:</strong> open</p>
+<p>Spend Energy below 40, stop spending, and record the numeric bar recovering.
+Try an ability as soon as its cost is reached, to distinguish usable regeneration
+from a smoothly animated bar. Record race, talents and buffs.</p>
+<p>This macro captures the client&#39;s reported recovery rates and haste:</p>
+<pre><code class="language-lua">/run local a,b=GetPowerRegen(); print(&quot;Energy&quot;,UnitPower(&quot;player&quot;,3),&quot;Regen&quot;,a,b,&quot;Haste&quot;,GetHaste())
+</code></pre>
+<p>Repeat with Slice and Dice or another available attack-speed/haste effect, naming
+the exact buff. Slice and Dice tests that particular effect; it does not establish
+what haste rating does. A Skyborne character&#39;s racial is another useful case.</p>
+<p><strong>Resolves:</strong> usable recovery cadence, the 10 Energy/sec baseline, and whether
+particular haste effects increase regeneration. The simulator now approximates
+smooth recovery with 100-ms updates and assumes general haste increases Energy
+recovery. Attack-speed-only effects are excluded from that assumption.
+The client table confirms the base rate, not either server-side interaction.</p>
+<p>An <strong>Iron Counterweight</strong> on a two-handed weapon is a useful equipment check
+if one can be crafted at the available profession cap. Compare melee speed,
+ranged speed (Hunter), and Energy recovery (Cat). Client spell 7217 specifies
+melee attack speed, not ranged speed or general haste. The model now reflects
+that distinction. Arcanum of Rapidity needs later access; its client effect
+adds melee and ranged speed, but not casting speed.</p>
+<h3 id="t16--energy-costs-and-failed-attack-refunds">T16 — Energy costs and failed-attack refunds</h3>
+<p><strong>Priority:</strong> medium · <strong>Access:</strong> Rogue or level-20 Cat · <strong>Status:</strong> open</p>
+<p>Record the tooltip cost and Energy immediately before/after a landed builder,
+a missed/dodged builder, and a missed/dodged damaging finisher. Include timestamps
+so natural regeneration can be separated from the refund. Note the exact rank
+and cost-reduction talents. For Gnomes, repeat a builder under Eureka.</p>
+<p><strong>Resolves:</strong> the engine&#39;s inherited 80% builder refund and zero damaging-finisher
+refund. The simulator refunds a fraction of the amount actually paid, including
+temporary discounts; client cost records alone do not verify these server rules.</p>
+<h3 id="t01--weapon-skill-and-combat-table-tooltips">T01 — Weapon-skill and combat-table tooltips</h3>
+<p><strong>Priority:</strong> high · <strong>Effort:</strong> a few screenshots · <strong>Status:</strong> open</p>
+<p>Capture the expanded weapon-skill tooltip and character combat stats at level 20,
+including any table of outcomes against higher-level targets. Include weapon
+type and current/max skill. If practical, capture a second weapon with a
+different skill value.</p>
+<p><strong>Resolves:</strong> the hit/crit suppression rules and any stated glancing penalty.
+The engine still uses inherited Classic combat tables; flat defence penalties
+and the smaller boss glancing penalty have not been established in this model.
+Tooltip evidence alone will not establish the observed outcome distribution.</p>
+<h3 id="t02--rage-gained-from-outgoing-white-hits">T02 — Rage gained from outgoing white hits</h3>
+<p><strong>Priority:</strong> high · <strong>Access:</strong> Warrior · <strong>Status:</strong> open</p>
+<p>Use a target being held by someone else, or a training target, so incoming damage
+does not also generate rage. Record level, weapon damage/speed, attack power,
+talents, and racial/buff effects. Start from zero rage and record several ordinary
+hits with the damage and rage change visible. Repeat with a substantially faster
+or slower weapon. At level 20, an off-hand comparison is also useful if dual wield
+is available.</p>
+<p>A short recording is useful: a combat log may not expose white-hit rage changes
+with enough precision on its own.</p>
+<p><strong>Resolves:</strong> whether outgoing rage follows damage alone, or contains a
+weapon-speed/normalisation term. The level-60 conversion constant must <strong>not</strong> be
+applied directly to a level-20 result. Critical hits, dodges and off-hand hits
+are useful additional samples, identified separately.</p>
+<h3 id="t03--eureka-charges-scope-and-channels">T03 — Eureka charges, scope and channels</h3>
+<p><strong>Priority:</strong> high · <strong>Access:</strong> Gnome · <strong>Status:</strong> open</p>
+<p>Capture the racial tooltip for the tested class. Activate Eureka and record:</p>
+<ol>
+<li>Resource cost and charge count across three damaging casts.</li>
+<li>Whether white swings, wand shots, a non-damaging ability, or a proc use a charge
+or receive the damage bonus.</li>
+<li>For a caster, use a channel as the <strong>third</strong> charged ability. Compare its
+individual ticks with an unbuffed channel.</li>
+<li>For a DoT, compare the ticks of a charged cast after the racial aura expires.</li>
+</ol>
+<p>Useful early abilities include Sinister Strike, Fireball/Arcane Missiles, and
+Corruption/Drain Life, depending on class and what the beta spellbook offers.
+Record mana-reduction talents when comparing costs.</p>
+<p><strong>Resolves:</strong> charge consumption, modifier stacking, projectile/channel timing,
+and DoT snapshots. Client data has separate class versions and resource-cost
+reductions; the previous generic racial implementation is not sufficient.</p>
+<h3 id="t04--read-ley-line-during-combat">T04 — Read Ley Line during combat</h3>
+<p><strong>Priority:</strong> medium · <strong>Access:</strong> Skyborne with the racial · <strong>Status:</strong> open</p>
+<p>Away from a visible ley line, record the cast time, buff duration and resource
+ticks after using it. Compare an idle period with continuous casting, recording
+Spirit, mana/5, and the resource bar. If a ley line can be reached, capture the
+same observations there separately.</p>
+<p><strong>Resolves:</strong> whether the bonus affects Spirit regeneration, flat mana/5, or both,
+and whether it bypasses the five-second rule. Its ordinary and ley-line
+durations must not be conflated. No favourable ley-line location is assumed
+for the benchmark.</p>
+<h3 id="t05--priest-spellbook-differences">T05 — Priest spellbook differences</h3>
+<p><strong>Priority:</strong> medium · <strong>Access:</strong> any Priest · <strong>Status:</strong> open</p>
+<p>Capture race, level, the trainer&#39;s available spells and the relevant spellbook
+pages. Particularly useful are Devouring Plague, Starshards, Shadowguard,
+Hex of Weakness and Dark Sacrifice, if present.</p>
+<p><strong>Resolves:</strong> class/race restrictions and replaced abilities. Retained
+SkillLineAbility records are not by themselves proof that a spell can be learned.
+This check does not require levelling a separate character solely for it.</p>
+<h3 id="t12--low-rank-spell-power-scaling">T12 — Low-rank spell-power scaling</h3>
+<p><strong>Priority:</strong> high · <strong>Access:</strong> level-20 Shaman with some spell-power gear · <strong>Status:</strong> open</p>
+<p>Compare Lightning Bolt ranks 3 and 4 with two known spell-power totals, keeping
+talents and the target unchanged. Record spell tooltips and roughly 30 ordinary,
+unresisted, non-critical hits for each rank at each spell-power total.
+Changing only spell-power equipment makes the comparison easier to interpret.</p>
+<p>For each rank, divide the change in average damage by the change in spell power.
+The current client records a 0.714 coefficient for both ranks. A remaining
+server-side low-level/downranking penalty would make the measured coefficients
+differ. Damage talents can multiply both measurements and should be recorded.</p>
+<p><strong>Resolves:</strong> whether the low-rank fillers used for mana efficiency retain their
+client-listed scaling. This affects Elemental and Stormcaller rotation choices
+and potentially other caster classes. The model currently uses the client values.</p>
+<p>A Priest can also test Smite rank 3 at level 20 using two spell-power totals.
+Its client coefficient is 0.714, before damage talents. This directly checks the
+low-rank filler considered by the Smite build.</p>
+<h3 id="t17--mind-flay-and-channel-haste">T17 — Mind Flay and channel haste</h3>
+<p><strong>Priority:</strong> medium · <strong>Access:</strong> level-20 Shadow Priest · <strong>Status:</strong> open</p>
+<p>Record Mind Flay&#39;s cast bar and tick timestamps with and without a named haste
+effect. Troll Berserking is useful if available. Distinguish a shorter global
+cooldown from a shorter channel or faster ticks.</p>
+<p><strong>Resolves:</strong> the engine currently keeps Mind Flay at three one-second ticks,
+without channel haste. Client base duration alone does not establish the
+server&#39;s haste behavior.</p>
+<h3 id="t18--cat-attacks-and-weapon-damage">T18 — Cat attacks and weapon damage</h3>
+<p><strong>Priority:</strong> high · <strong>Access:</strong> level-20 Cat · <strong>Status:</strong> open</p>
+<p>Compare Cat-form white attacks using two weapons with substantially different
+weapon DPS, ideally plain weapons without attributes or procs. Keep the target
+and other equipment unchanged; record the Cat-form attack-power and damage
+tooltips for both. Collect ordinary, non-critical, non-glancing hits separately.</p>
+<p><strong>Resolves:</strong> whether weapon DPS contributes to Cat damage or attack power in
+Forever. The current model inherits Classic&#39;s form weapon, rather than adding
+retail-style weapon-DPS scaling. This is separate from Energy regeneration.</p>
+<h3 id="t13--aimed-shot-cast-time-and-auto-shot-timing">T13 — Aimed Shot cast time and Auto Shot timing</h3>
+<p><strong>Status:</strong> reported gameplay rule adopted</p>
+<p>Aimed Shot uses the client&#39;s two-second base cast without an additional
+half-second wind-up. Auto Shot continues during it. The engine now implements
+this rule; a regression test compares the shot count with an idle-auto run.
+Sniper Shot likewise uses its four-second client cast. Multi-Shot retains its
+client-listed half-second cast, without suspending autos.</p>
+<h2 id="possible-if-suitable-targets-are-reachable">Possible if suitable targets are reachable</h2>
+<h3 id="t06--white-miss-and-glancing-outcomes">T06 — White miss and glancing outcomes</h3>
+<p><strong>Priority:</strong> high · <strong>Status:</strong> open, target access uncertain</p>
+<p>At maximum weapon skill, collect white attacks against targets of known level:
+same level and, if reachable, three levels higher. Keep hit bonuses and equipment
+fixed within each sample; separate single-weapon and dual-wield samples.
+Several hundred swings are useful for outcome rates. Preserve individual
+glancing damage values rather than only the average.</p>
+<p><strong>Resolves:</strong> dual-wield miss, glancing frequency and the glancing damage range.
+Level-20 targets cannot directly validate a level-63 raid boss, but relative-level
+comparisons can distinguish several competing formulas.</p>
+<h2 id="deferred-beyond-the-current-level-limit">Deferred beyond the current level limit</h2>
+<div class="tw"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Question</th>
+<th>Why it matters</th>
+<th>Access needed</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T07</td>
+<td>Which DoTs Wrack amplifies, and exactly when amplification ends after cancelling</td>
+<td>Affliction channel timing and DoT selection</td>
+<td>Wrack&#39;s 31-point talent, normally level 40</td>
+</tr>
+<tr>
+<td>T08</td>
+<td>Whether Incinerate&#39;s Immolate bonus also multiplies spell-power damage</td>
+<td>Destruction scaling and filler choice</td>
+<td>Incinerate&#39;s 31-point talent</td>
+</tr>
+<tr>
+<td>T09</td>
+<td>Demonic Pact and sacrifice-buff coexistence with a different active demon</td>
+<td>Demonology build identity and damage</td>
+<td>Demonic Pact&#39;s 31-point talent</td>
+</tr>
+<tr>
+<td>T10</td>
+<td>Frostfire interactions with Missile Barrage, Fingers of Frost and Tier 1</td>
+<td>Mage proc rates and rotation</td>
+<td>Relevant deeper talents and the actual set effect</td>
+</tr>
+<tr>
+<td>T11</td>
+<td>Tier 1 Insect Swarm&#39;s final second: partial tick, delayed tick, or aura tail</td>
+<td>Balance refresh timing</td>
+<td>Actual Tier 1 bonus</td>
+</tr>
+<tr>
+<td>T14</td>
+<td>Summon Hawk guardian attacks, two-hawk coexistence and scaling</td>
+<td>Beast Mastery damage and talent value; the engine approximates one guardian with periodic damage</td>
+<td>Summon Hawk, normally level 25 or later</td>
+</tr>
+<tr>
+<td>T19</td>
+<td>Penance bolt timing and haste</td>
+<td>The engine spreads three ticks over two seconds, using Forever&#39;s periodic critical-hit rules; do not rely on partial-channel optimizations until this is checked</td>
+<td>Penance, normally level 30 or later</td>
+</tr>
+<tr>
+<td>T21</td>
+<td>Maelstrom Weapon proc rate and Totem of the Storm</td>
+<td>Count procs per landed melee attack with two weapon speeds, then per Lightning Bolt cast while out of melee range with item 272432. Its tooltip specifies half the ordinary chance, but does not define a spell conversion from PPM.</td>
+<td>Maelstrom Weapon talent; level 60 for the totem</td>
+</tr>
+</tbody></table></div>
+<h2 id="result-record">Result record</h2>
+<p>For a completed check, retain the ID, client build, race/class/level, relevant
+talents and equipment, target level/type, observations, and any log or recording.
+The list will distinguish measured results from remaining interpretations.</p>
+</article></body></html>

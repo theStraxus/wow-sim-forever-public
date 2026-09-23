@@ -1,0 +1,357 @@
+{
+  "settings": {
+    "iterations": 5000,
+    "fixedRngSeed": "20291951",
+    "ruleset": "RulesetForever",
+    "phase": 1,
+    "faction": "Alliance",
+    "showDamageMetrics": true
+  },
+  "raidBuffs": {
+    "giftOfTheWild": "TristateEffectRegular",
+    "powerWordFortitude": "TristateEffectRegular",
+    "bloodPact": "TristateEffectImproved",
+    "strengthOfEarthTotem": "TristateEffectRegular",
+    "graceOfAirTotem": "TristateEffectRegular",
+    "arcaneBrilliance": true,
+    "divineSpirit": true,
+    "battleShout": "TristateEffectRegular",
+    "trueshotAura": true,
+    "leaderOfThePack": true,
+    "moonkinAura": true,
+    "manaSpringTotem": "TristateEffectImproved",
+    "shadowProtection": true,
+    "natureResistanceTotem": true,
+    "frostResistanceAura": true,
+    "frostResistanceTotem": true,
+    "fireResistanceTotem": true,
+    "fireResistanceAura": true,
+    "thorns": "TristateEffectImproved",
+    "devotionAura": "TristateEffectImproved",
+    "retributionAura": "TristateEffectImproved",
+    "sanctityAura": true
+  },
+  "partyBuffs": {},
+  "debuffs": {
+    "judgementOfWisdom": true,
+    "judgementOfLight": true,
+    "judgementOfTheCrusader": "TristateEffectImproved",
+    "faerieFire": true,
+    "curseOfElements": true,
+    "stormstrike": true,
+    "exposeArmor": "TristateEffectRegular",
+    "sunderArmor": true,
+    "curseOfWeakness": "TristateEffectImproved",
+    "curseOfRecklessness": true,
+    "demoralizingRoar": "TristateEffectImproved",
+    "demoralizingShout": "TristateEffectImproved",
+    "thunderClap": "TristateEffectImproved",
+    "insectSwarm": true,
+    "scorpidSting": true,
+    "huntersMark": "TristateEffectRegular"
+  },
+  "tanks": [],
+  "player": {
+    "name": "Balance",
+    "race": "RaceSkyborneHighOrder",
+    "class": "ClassDruid",
+    "equipment": {
+      "items": [
+        {
+          "id": 252561,
+          "enchant": 2544
+        },
+        {
+          "id": 23125
+        },
+        {
+          "id": 19050,
+          "enchant": 2488
+        },
+        {
+          "id": 18510,
+          "enchant": 1889
+        },
+        {
+          "id": 19682,
+          "enchant": 1891
+        },
+        {
+          "id": 254123,
+          "enchant": 2566
+        },
+        {
+          "id": 17721,
+          "enchant": 2617
+        },
+        {
+          "id": 18405
+        },
+        {
+          "id": 252486,
+          "enchant": 2544
+        },
+        {
+          "id": 19684,
+          "enchant": 851
+        },
+        {
+          "id": 272407
+        },
+        {
+          "id": 19522
+        },
+        {
+          "id": 272438
+        },
+        {
+          "id": 249469
+        },
+        {
+          "id": 272683,
+          "enchant": 2504
+        },
+        {
+          "id": 272685
+        },
+        {
+          "id": 272430
+        }
+      ]
+    },
+    "consumes": {
+      "flask": "FlaskOfSupremePower",
+      "food": "FoodRunnTumTuberSurprise",
+      "manaRegenElixir": "MagebloodPotion",
+      "spellPowerBuff": "GreaterArcaneElixir",
+      "mainHandImbue": "BrilliantWizardOil",
+      "defaultPotion": "MajorManaPotion",
+      "defaultConjured": "ConjuredDemonicRune",
+      "zanzaBuff": "CerebralCortexCompound"
+    },
+    "bonusStats": {
+      "stats": [
+        0,
+        0,
+        0,
+        -16.070532478394203,
+        0,
+        -35.95037635907444,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        6.1,
+        -0.4761639252857542,
+        0,
+        0,
+        0,
+        6.1,
+        -0.4761639252857542,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        -8.689991636465013,
+        0
+      ]
+    },
+    "foreverTier1Bonuses": true,
+    "buffs": {
+      "blessingOfKings": true,
+      "blessingOfWisdom": "TristateEffectRegular",
+      "blessingOfMight": "TristateEffectRegular"
+    },
+    "talentsString": "5232220115501351--505003",
+    "profession1": "Engineering",
+    "rotation": {
+      "type": "TypeAPL",
+      "prepullActions": [
+        {
+          "action": {
+            "castSpell": {
+              "spellId": {
+                "spellId": 24858
+              }
+            }
+          },
+          "doAtValue": {
+            "const": {
+              "val": "-2s"
+            }
+          }
+        }
+      ],
+      "priorityList": [
+        {
+          "action": {
+            "autocastOtherCooldowns": {}
+          }
+        },
+        {
+          "action": {
+            "condition": {
+              "not": {
+                "val": {
+                  "dotIsActive": {
+                    "spellId": {
+                      "spellId": 24977,
+                      "rank": 5
+                    }
+                  }
+                }
+              }
+            },
+            "castSpell": {
+              "spellId": {
+                "spellId": 24977,
+                "rank": 5
+              }
+            }
+          }
+        },
+        {
+          "action": {
+            "condition": {
+              "not": {
+                "val": {
+                  "dotIsActive": {
+                    "spellId": {
+                      "spellId": 9835,
+                      "rank": 10
+                    }
+                  }
+                }
+              }
+            },
+            "castSpell": {
+              "spellId": {
+                "spellId": 9835,
+                "rank": 10
+              }
+            }
+          }
+        },
+        {
+          "action": {
+            "condition": {
+              "cmp": {
+                "op": "OpGe",
+                "lhs": {
+                  "auraNumStacks": {
+                    "auraId": {
+                      "spellId": 48518
+                    }
+                  }
+                },
+                "rhs": {
+                  "const": {
+                    "val": "1"
+                  }
+                }
+              }
+            },
+            "castSpell": {
+              "spellId": {
+                "spellId": 25298,
+                "rank": 7
+              }
+            }
+          }
+        },
+        {
+          "action": {
+            "castSpell": {
+              "spellId": {
+                "spellId": 9912,
+                "rank": 8
+              }
+            }
+          }
+        }
+      ]
+    },
+    "distanceFromTarget": 20,
+    "balanceDruid": {
+      "options": {}
+    }
+  },
+  "encounter": {
+    "duration": 300,
+    "executeProportion20": 0.2,
+    "executeProportion25": 0.25,
+    "executeProportion35": 0.35,
+    "targets": [
+      {
+        "level": 63,
+        "stats": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3731,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      }
+    ]
+  }
+}
